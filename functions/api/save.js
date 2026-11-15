@@ -1,7 +1,7 @@
 import { json, sb, getUser, readJson, isInt } from './_lib.js';
 import { audit } from './admin/_admin.js';
 
-const PRICES = [0, 300, 800, 1500, 0, 500, 1200, 2200, 3500, 5000];   // car prices; coins + the value of owned cars can only grow at a believable speed
+const PRICES = [0, 5000, 15000, 35000, 75000, 120000, 200000, 350000, 500000, 1000000];   // car prices; coins + the value of owned cars can only grow at a believable speed
 const MAX_PER_HOUR = 30000, SLACK = 5000, FIRST_CAP = 300000, MAX_HOURS = 72;
 const spent = (d) => d.o.reduce((a, v, i) => a + (v ? (PRICES[i] || 0) : 0), 0);
 
