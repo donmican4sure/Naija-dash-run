@@ -26,7 +26,43 @@ button{font:inherit;color:var(--text);border:0;cursor:pointer}
 #gar{display:flex;gap:6px;align-items:center;margin-top:8px}#gar button{background:#ffffff22;border-radius:10px;padding:10px 12px}#cn{flex:1;background:#ffffff14;border-radius:10px;padding:8px}
 .bt.p2{background:#6a2c91}#wsh{position:fixed;inset:0;pointer-events:none;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);background:radial-gradient(circle at 20% 30%,#ffffff44 0 3px,transparent 4px),radial-gradient(circle at 70% 55%,#ffffff44 0 4px,transparent 5px),radial-gradient(circle at 45% 75%,#ffffff44 0 3px,transparent 4px),#ffffff12}#c2{position:fixed;right:8px;top:calc(env(safe-area-inset-top,0px) + 200px);display:flex;flex-direction:column;gap:5px}#c2 button{width:46px;height:36px;font-size:18px;padding:0}#c2 .on{outline:2px solid var(--gold);background:#5a4300}.bt.w{background:#fff;color:#0a3d1c}.lb{display:flex;justify-content:space-between;padding:5px 9px;border-radius:8px;font-weight:600;text-align:left}.lb.me{background:#f5b80033;color:var(--gold)}.lb small{color:#9fc7a8}
 .hide{display:none!important}
-</style><script>window.addEventListener('error',function(e){try{var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:99999;background:#7a1010;color:#fff;font:12px/1.4 system-ui;padding:10px;border-radius:10px;white-space:pre-wrap;max-height:40vh;overflow:auto';document.documentElement.appendChild(d)}d.textContent='Game error (send me a screenshot of this):\n'+(e.message||'')+' line '+(e.lineno||'?')}catch(x){}});</script><link rel="manifest" href="/manifest.json">
+</style><script>window.addEventListener('error',function(e){try{var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:99999;background:#7a1010;color:#fff;font:12px/1.4 system-ui;padding:10px;border-radius:10px;white-space:pre-wrap;max-height:40vh;overflow:auto';document.documentElement.appendChild(d)}d.textContent='Game error (send me a screenshot of this):\n'+(e.message||'')+' line '+(e.lineno||'?')}catch(x){}});
+  // ---- ADMIN & BILLBOARD AD MANAGER CONSOLE ----
+  function adminMenu(){
+    var pass = prompt('Enter Admin Passcode:');
+    if(pass !== 'naija99' && pass !== 'admin') { say('Incorrect passcode!', 2); return; }
+    var h = '<div style="background:#111;padding:16px;border-radius:12px;color:#fff;max-width:400px;margin:auto;text-align:left">';
+    h += '<h3 style="color:#f2b800;margin-top:0">🛠️ Naija Dash Admin Center</h3>';
+    h += '<p style="font-size:12px;opacity:0.8">Manage live billboards, active ad campaigns, and player wallet balances.</p>';
+    
+    h += '<div style="background:#222;padding:10px;border-radius:8px;margin-bottom:10px">';
+    h += '<b>📢 Active Billboard Slogan:</b><br>';
+    h += '<input id="adSloganInput" style="width:100%;padding:8px;margin-top:4px;background:#333;color:#fff;border:1px solid #444;border-radius:4px" value="'+(window.CURRENT_AD_SLOGAN || 'SHARP SHARP NAIJA!')+'">';
+    h += '<button class="bt y" style="margin-top:8px;width:100%;padding:8px" onclick="updateBillboardAd()">Push Ad to Billboards</button>';
+    h += '</div>';
+
+    h += '<div style="background:#222;padding:10px;border-radius:8px;margin-bottom:10px">';
+    h += '<b>💰 Player Wallet Adjustment:</b><br>';
+    h += '<input id="adminWalletInput" type="number" style="width:100%;padding:8px;margin-top:4px;background:#333;color:#fff;border:1px solid #444;border-radius:4px" value="'+sv.c+'">';
+    h += '<button class="bt y" style="margin-top:8px;width:100%;padding:8px" onclick="adminSetWallet()">Update Wallet Balance</button>';
+    h += '</div>';
+
+    h += '<button class="bt" style="width:100%;background:#444;color:#fff;margin-top:10px" onclick="menu()">Close Admin</button>';
+    h += '</div>';
+    $('m').innerHTML = h;
+    st='menu';
+  }
+  function updateBillboardAd(){
+    var val = $('adSloganInput').value;
+    window.CURRENT_AD_SLOGAN = val;
+    say('Billboard ad updated live!', 2);
+  }
+  function adminSetWallet(){
+    var val = parseInt($('adminWalletInput').value);
+    if(!isNaN(val)){ sv.c = val; save(); say('Wallet updated to ₦'+val, 2); }
+  }
+  
+</script><link rel="manifest" href="/manifest.json">
 </head><body>
 <canvas id="c"></canvas>
 <div id="top"><div class="p"><b id="b">0</b> <span id="u">m</span><br><span id="s"></span><div class="bar" id="bw"><i id="dm"></i></div></div>
@@ -175,10 +211,7 @@ function startDash(t){tour=!!t;rnd=t?mul(sv.t.wk*2654435761):Math.random;tT=90;$
 function row(){var free=AD?adFree():Math.floor(rnd()*3),n=rnd()<.45?2:1,od=[0,1,2].filter(function(l){return l!==free}).sort(function(){return rnd()-.5});
 for(var k=0;k<n;k++){var l=od[k],r=rnd(),t=r<.4?'o':r<.7?'k':'p',g=t==='o'?okada():t==='k'?keke():pot();g.position.set(LN[l],0,-125);G.add(g);objs.push({g:g,t:t,hx:t==='o'?.4:t==='k'?.8:.9,hz:t==='o'?.9:t==='k'?1:.9})}
 if(rnd()<.75)for(var c=0;c<4;c++){var cg=coin();cg.position.set(LN[free],1,-125-c*3);G.add(cg);objs.push({g:cg,t:'c',hx:.7,hz:.6})}}
-function nx(){var b=null;CARS.forEach(function(c,i){if(c.p>0&&!sv.o[i]&&(!b||c.p<b.p))b=c});return b?(b.p<=sv.c?' · You can buy the '+b.n+' now!':' · Next: '+b.n+' (₦'+(b.p-sv.c)+' to go)'):''}function endDash(){if(tour){endTour(0);return}st='over';var gain=coins*2;sv.c+=gain;var nb=Math.floor(dist)>sv.b[0];if(nb)sv.b[0]=Math.floor(dist);save();shake=.6;menu('Wahala! You crash','Distance '+Math.floor(dist)+' m · Coins '+coins+' (+₦'+gain+')'+(nb?' · NEW BEST!':' · only '+(sv.b[0]-Math.floor(dist))+' m short of your best ('+sv.b[0]+' m)')+' · Wallet ₦'+sv.c+nx())}
-// ---- TOURNAMENT
-var NM=['Tunde_Danfo','Chioma_Fast','Ibrahim_KN','Ada_PH','Emeka_Okada','Sade_Lekki','Musa_Kano','Ngozi_Enu','Bayo_Oshodi','Funke_VI','Segun_Ibadan','Amaka_Abj','Kelechi_Cal','Yusuf_Abuja'],PR=['₦10,000','₦5,000','₦2,500'];
-function board(tr){var q=mul(sv.t.wk*977+tr*131),a=NM.map(function(n){return{n:n,s:6000+Math.floor(q()*9000)}});if(sv.t.b[tr]>0)a.push({n:'You',s:sv.t.b[tr],me:1});a.sort(function(x,y){return y.s-x.s});return a}
+function nx(){var b=null;CARS.forEach(function(c,i){if(c.p>0&&!sv.o[i]&&(!b||c.p<b.p))b=c});return b?(b.p<=sv.c?' · You can buy the '+b.n+' now!':' · Next: '+b.n+' (₦'+(b.p-sv.c)+' to go)'):''}function endDash(){if(tour){endTour(0);return}st='over';var coinCash=coins;var distCash=Math.floor(dist/10);var totalCash=coinCash+distCash;sv.c+=totalCash;var nb=Math.floor(dist)>sv.b[0];if(nb)sv.b[0]=Math.floor(dist);save();shake=.6;menu('Wahala! You crash','Coins: '+coins+' (+\u20a6'+coinCash+') | Dist: '+Math.floor(dist)+'m (+\u20a6'+distCash+') · Total: +\u20a6'+totalCash+(nb?' · NEW BEST!':'')+' · Wallet: ₦'+sv.c+nx());;if(sv.t.b[tr]>0)a.push({n:'You',s:sv.t.b[tr],me:1});a.sort(function(x,y){return y.s-x.s});return a}
 function rank(tr){var b=board(tr);for(var k=0;k<b.length;k++)if(b[k].me)return '#'+(k+1)+' of '+b.length;return '-'}
 function endTour(up){if(TC.on){st='over';shake=.6;TCB=null;tcNext(Math.min(1500,Math.floor(dist)+coins*10));return}st='over';var t=sv.t,tr=0,pts=Math.floor(dist)+coins*10;t.att--;var nb=pts>t.b[tr];if(nb)t.b[tr]=pts;save();shake=.6;menu(up?'Time up! See your score':'Crash! Attempt don end','Score '+pts+' (distance '+Math.floor(dist)+' + coins '+coins+'×10)'+(nb?' · NEW BEST!':'')+' · rank '+rank(tr)+' · attempts left '+t.att)}
 function renderTour(){var t=sv.t,tr=tourTab,b=board(tr),h='<h1>🏆 '+WEEKS[WK%4].n.toUpperCase()+'</h1><div class="g"></div><p>This week: <b>'+CITIES[WK%5].n+'</b>'+presented()+' · prizes coming soon</p><p style="font-size:12px">Free to enter. One 40-minute championship of 25 stages: licence skills, long legs (comfort, limits, rush, hazards, sirens), street yield, the city signature stage and a Dash sprint. Progress saves after each stage. Same stages for everyone. Car colours are cosmetic only.</p><div style="margin-top:8px">';
