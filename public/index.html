@@ -1214,11 +1214,16 @@ $('revad').onclick=function(){NDA.show(function(){rvGo()},function(){say('No ad 
 $('revx').onclick=function(){$('rev').classList.add('hide');endDash()};
 
 
+);
+}
+</script>
+
+<script>
 // ---- Daily Streak & Rewards System
 var STREAK_AMOUNTS = [150, 300, 500, 800, 1200, 1800, 3000];
 
 function dk(d) {
-  return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
 }
 
 function getStreakInfo() {
@@ -1226,10 +1231,10 @@ function getStreakInfo() {
   var s = window.NDG.get();
   var today = dk(new Date());
   var yesterday = dk(new Date(Date.now() - 864e5));
-  var dr = s.dr || { d: '', s: 0 };
+  var dr = s.dr || { d: "", s: 0 };
   
   var streak = dr.d === yesterday ? dr.s + 1 : (dr.d === today ? dr.s : 1);
-  if (streak > 7) streak = ((streak - 1) % 7) + 1; // Loop or cap at 7
+  if (streak > 7) streak = ((streak - 1) % 7) + 1;
   var claim = dr.d !== today;
   var amt = STREAK_AMOUNTS[streak - 1];
   return { t: today, claim: claim, streak: streak, amt: amt };
@@ -1237,324 +1242,61 @@ function getStreakInfo() {
 
 function openStreakModal() {
   var info = getStreakInfo();
-  var h = '<div style="font-size:20px;font-weight:700;color:var(--gold);margin-bottom:6px">🔥 Daily Login Streak</div>' +
-          '<p style="font-size:13px;margin:0 0 12px">Log in every day to claim escalating coin rewards and build your streak!</p>' +
-          '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px">';
+  var h = "<div style=\"font-size:20px;font-weight:700;color:var(--gold);margin-bottom:6px\">🔥 Daily Login Streak</div>" +
+          "<p style=\"font-size:13px;margin:0 0 12px\">Log in every day to claim escalating coin rewards and build your streak!</p>" +
+          "<div style=\"display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px\">";
   
   for (var i = 1; i <= 7; i++) {
     var active = i === info.streak;
     var past = i < info.streak || (!info.claim && i === info.streak);
-    h += '<div style="background:' + (active && info.claim ? '#128c3a' : (past ? '#10202c' : '#ffffff11')) + ';border:2px solid ' + (active ? '#f2b800' : '#ffffff22') + ';border-radius:10px;padding:8px 4px;text-align:center">' +
-         '<div style="font-size:11px;opacity:0.8">Day ' + i + '</div>' +
-         '<div style="font-weight:700;font-size:13px;color:#f2b800">₦' + STREAK_AMOUNTS[i-1] + '</div>' +
-         '<div style="font-size:14px">' + (past ? '✅' : (active && info.claim ? '🎁' : '🔒')) + '</div>' +
-         '</div>';
+    h += "<div style=\"background:" + (active && info.claim ? "#128c3a" : (past ? "#10202c" : "#ffffff11")) + ";border:2px solid " + (active ? "#f2b800" : "#ffffff22") + ";border-radius:10px;padding:8px 4px;text-align:center\">" +
+         "<div style=\"font-size:11px;opacity:0.8\">Day " + i + "</div>" +
+         "<div style=\"font-weight:700;font-size:13px;color:#f2b800\">₦" + STREAK_AMOUNTS[i-1] + "</div>" +
+         "<div style=\"font-size:14px\">" + (past ? "✅" : (active && info.claim ? "🎁" : "🔒")) + "</div>" +
+         "</div>";
   }
-  h += '</div>';
+  h += "</div>";
   
   if (info.claim) {
-    h += '<button class="bt y" id="claimStreakBtn" style="width:100%;padding:12px;font-weight:700">🎁 Claim Day ' + info.streak + ' Reward (₦' + info.amt + ')</button>';
+    h += "<button class=\"bt y\" id=\"claimStreakBtn\" style=\"width:100%;padding:12px;font-weight:700\">🎁 Claim Day " + info.streak + " Reward (₦" + info.amt + ")</button>";
   } else {
-    h += '<p style="color:#2ec27e;font-weight:600">✅ Claimed for today! Come back tomorrow for Day ' + (info.streak >= 7 ? 1 : info.streak + 1) + '</p>';
+    h += "<p style=\"color:#2ec27e;font-weight:600\">✅ Claimed for today! Come back tomorrow for Day " + (info.streak >= 7 ? 1 : info.streak + 1) + "</p>";
   }
-  h += '<button class="bt" id="closeStreakBtn" style="background:#ffffff22;margin-top:8px;width:100%">Close</button>';
+  h += "<button class=\"bt\" id=\"closeStreakBtn\" style=\"background:#ffffff22;margin-top:8px;width:100%\">Close</button>";
   
-  // Create or update modal overlay
-  var m = document.getElementById('streakModal');
+  var m = document.getElementById("streakModal");
   if (!m) {
-    m = document.createElement('div');
-    m.id = 'streakModal';
-    m.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;padding:16px';
+    m = document.createElement("div");
+    m.id = "streakModal";
+    m.style.cssText = "position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;padding:16px";
     document.body.appendChild(m);
   }
-  m.innerHTML = '<div style="background:#08131d;color:#fff;border-radius:18px;padding:20px;width:100%;max-width:360px;text-align:center;box-sizing:border-box;border:1px solid #ffffff22">' + h + '</div>';
-  m.classList.remove('hide');
+  m.innerHTML = "<div style=\"background:#08131d;color:#fff;border-radius:18px;padding:20px;width:100%;max-width:360px;text-align:center;box-sizing:border-box;border:1px solid #ffffff22\">" + h + "</div>";
+  m.classList.remove("hide");
   
-  if (document.getElementById('claimStreakBtn')) {
-    document.getElementById('claimStreakBtn').onclick = function() {
+  if (document.getElementById("claimStreakBtn")) {
+    document.getElementById("claimStreakBtn").onclick = function() {
       var inf = getStreakInfo();
       var s = window.NDG.get();
       s.c += inf.amt;
       s.dr = { d: inf.t, s: inf.streak };
       window.NDG.save();
       window.NDG.gui();
-      say('Daily reward claimed! +₦' + inf.amt, 3);
-      m.classList.add('hide');
+      say("Daily reward claimed! +₦" + inf.amt, 3);
+      m.classList.add("hide");
     };
   }
-  document.getElementById('closeStreakBtn').onclick = function() {
-    m.classList.add('hide');
+  document.getElementById("closeStreakBtn").onclick = function() {
+    m.classList.add("hide");
   };
 }
 
-// Popup reminder on startup if reward is ready
 setTimeout(function() {
   var inf = getStreakInfo();
   if (inf.claim && window.NDAuth && window.NDAuth.user()) {
     openStreakModal();
   }
 }, 1500);
-
-// ---- Daily challenges, achievements and player level
-var PGC=[
-{id:'runs3',t:0,txt:'Play 3 Classic Dash runs',goal:3,k:'runs',r:100},
-{id:'coins40',t:0,txt:'Collect 40 coins in Classic Dash',goal:40,k:'coins',r:100},
-{id:'best600',t:1,txt:'Reach 600 m in one Classic Dash run',goal:600,k:'best',r:150},
-{id:'dist2000',t:1,txt:'Drive 2,000 m in total in Classic Dash',goal:2000,k:'dist',r:150},
-{id:'best1000',t:2,txt:'Reach 1,000 m in one Classic Dash run',goal:1000,k:'best',r:300},
-{id:'stg2',t:2,txt:'Pass 2 licence stages',goal:2,k:'stg',r:250}];
-function pgOwned(){var n=0;for(var i=1;i<4;i++)if(sv.o&&sv.o[i])n++;return n}
-var PGA=[
-['first','First run','Finish a Classic Dash run',function(s){return s.runs>=1}],
-['run10','Regular','Finish 10 Classic Dash runs',function(s){return s.runs>=10}],
-['d500','Warming up','Reach 500 m in one run',function(s){return s.best>=500}],
-['d1000','Road warrior','Reach 1,000 m in one run',function(s){return s.best>=1000}],
-['d2500','Naija legend','Reach 2,500 m in one run',function(s){return s.best>=2500}],
-['c500','Coin chaser','Collect 500 coins in total',function(s){return s.coins>=500}],
-['stg1','Learner driver','Pass a licence stage',function(s){return s.stg>=1}],
-['stg10','Licensed','Pass 10 licence stages',function(s){return s.stg>=10}],
-['car2','Upgrade','Own a second car',function(){return pgOwned()>=1}],
-['streak7','Show up','Reach a 7-day daily reward streak',function(){return !!(sv.dr&&sv.dr.s>=7)}],
-['ranked','Contender','Finish a ranked circuit',function(){return !!(sv.rk&&sv.rk.done)}]];
-function pgDay(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
-function pgLvl(x){return Math.floor(Math.sqrt(x/60))+1}
-function pgS(){var t=pgDay(new Date());if(!sv.pg)sv.pg={d:'',ch:[],xp:0,st:{runs:0,coins:0,dist:0,best:0,stg:0},ach:{},dy:{}};var p=sv.pg;
-if(p.d!==t){p.d=t;p.dy={runs:0,coins:0,dist:0,best:0,stg:0};var n=Math.floor(new Date(t+'T12:00:00').getTime()/864e5);p.ch=[0,1,2].map(function(tier){var a=PGC.filter(function(c){return c.t===tier});return{id:a[(n+tier)%a.length].id,done:0}})}
-return p}
-function pgXp(n){var p=pgS(),a=pgLvl(p.xp);p.xp+=n;var b=pgLvl(p.xp);if(b>a){sv.c+=25*b;say('Level up! You are level '+b+'  +\u20a6'+25*b,3)}}
-function pgCheck(){var p=pgS();
-p.ch.forEach(function(h){if(h.done)return;var c=PGC.filter(function(x){return x.id===h.id})[0];if(p.dy[c.k]>=c.goal){h.done=1;sv.c+=c.r;pgXp(50);say('Challenge done! +\u20a6'+c.r,3)}});
-PGA.forEach(function(a){if(!p.ach[a[0]]&&a[3](p.st)){p.ach[a[0]]=1;pgXp(100);say('Achievement: '+a[1],3)}});
-save();try{gui()}catch(e){}pgLabel()}
-function pgEvent(o){var p=pgS();['runs','coins','dist','stg'].forEach(function(k){if(o[k]){p.st[k]+=o[k];p.dy[k]+=o[k]}});if(o.best){p.st.best=Math.max(p.st.best,o.best);p.dy.best=Math.max(p.dy.best,o.best)}if(o.xp)pgXp(o.xp);pgCheck()}
-function pgLabel(){var b=$('pgb');if(!b||!sv)return;b.style.display=fl('challenges')?'':'none';var p=pgS(),d=p.ch.filter(function(h){return h.done}).length;b.textContent='\ud83c\udfc5 Level '+pgLvl(p.xp)+' \u00b7 Daily challenges '+d+'/3'}
-function pgOpen(){var p=pgS(),l=pgLvl(p.xp),lo=60*(l-1)*(l-1),hi=60*l*l,pc=Math.round(100*(p.xp-lo)/(hi-lo));
-var h='<div style="font-size:18px;font-weight:700">Level '+l+'</div><div style="height:8px;background:#ffffff22;border-radius:6px;margin:6px 0"><div style="height:8px;width:'+pc+'%;background:#f2b800;border-radius:6px"></div></div><div style="font-size:12px;opacity:.8">'+(p.xp-lo)+' / '+(hi-lo)+' XP to level '+(l+1)+'</div><h3 style="margin:12px 0 6px">Today</h3>';
-p.ch.forEach(function(x){var c=PGC.filter(function(y){return y.id===x.id})[0],v=Math.min(c.goal,p.dy[c.k]||0);h+='<div style="text-align:left;margin:6px 0"><div style="font-size:14px">'+(x.done?'\u2705 ':'')+c.txt+' \u00b7 +\u20a6'+c.r+'</div><div style="height:6px;background:#ffffff22;border-radius:6px"><div style="height:6px;width:'+Math.round(100*v/c.goal)+'%;background:#1f8f4e;border-radius:6px"></div></div><div style="font-size:11px;opacity:.75">'+v+' / '+c.goal+'</div></div>'});
-h+='<h3 style="margin:12px 0 6px">Achievements</h3>';
-PGA.forEach(function(a){var u=p.ach[a[0]];h+='<div style="text-align:left;font-size:13px;margin:4px 0;opacity:'+(u?1:.5)+'">'+(u?'\ud83c\udfc6 ':'\ud83d\udd12 ')+'<b>'+a[1]+'</b> \u2013 '+a[2]+'</div>'});
-$('pgc').innerHTML=h;$('pg').classList.remove('hide')}
-$('pgb').onclick=pgOpen;$('pgx').onclick=function(){$('pg').classList.add('hide')};
-var pg_endDash=endDash;endDash=function(){var t=tour,d=Math.floor(dist),c=coins;pg_endDash();if(!t)pgEvent({runs:1,coins:c,dist:d,best:d,xp:10+Math.floor(d/100)*5+c})};
-var pg_stageEnd=stageEnd;stageEnd=function(ok){var g=ok&&L.on&&!TC.on;pg_stageEnd(ok);if(g)pgEvent({stg:1,xp:20})};
-setInterval(function(){if(sv)pgLabel()},1500);
-
-// ---- Naija city sound: music and street ambience per city
-var CSND={
-'Lagos':{st:.139,K:[0,3,6,10,12],C:[4,12],H:2,Q:[2,5,7,11,14],B:[110,110,147,131,110,165,147,131],L:[[0,330],[6,392],[10,440],[14,392]],am:['lowpass',700,.7,.05],ev:'horn',et:[2,6]},
-'Abuja':{st:.156,K:[0,8,10],C:[4,12],H:4,Q:[],B:[98,98,110,98,87,98,110,131],P:[196,247,294],L:[[2,294],[10,330]],am:['lowpass',500,.7,.03],ev:'horn',et:[8,18]},
-'Kano':{st:.163,K:[0,7,10],C:[],H:2,Q:[],D:[[2,180,260],[5,220,320],[9,160,240],[12,200,300]],B:[82,82,98,82,73,82,98,110],L:[[4,392],[12,330]],am:['bandpass',1100,.9,.03],ev:'murmur',et:[1.5,4]},
-'Port Harcourt':{st:.15,K:[0,6,8,12],C:[4,12],H:2,Q:[3,7,11,15],B:[98,98,110,123,98,98,131,123],L:[[0,294],[2,392],[4,440],[6,392],[8,294],[10,392],[12,440],[14,330]],am:['highpass',3500,.7,.04],ev:'thunder',et:[14,30]},
-'Enugu':{st:.17,K:[0,10],C:[8],H:4,Q:[],B:[73,73,82,73,65,73,82,98],P:[147,185,220],L:[[6,262],[14,294]],am:['bandpass',420,.8,.035],ev:'bird',et:[3,8]}};
-var NB=null,BED=null,MBT=0,MBS=0,MCITY='',MON=false,MNEXT=0;
-function nbuf(){if(NB)return NB;var b=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=Math.random()*2-1;NB=b;return b}
-function bed(p,on){if(!AC)return;if(!BED){var s=AC.createBufferSource();s.buffer=nbuf();s.loop=true;var f=AC.createBiquadFilter(),g=AC.createGain();g.gain.value=0;s.connect(f);f.connect(g);g.connect(AC.destination);s.start();BED={f:f,g:g}}
-var t=AC.currentTime;BED.f.type=p.am[0];BED.f.frequency.setTargetAtTime(p.am[1],t,.8);BED.f.Q.setTargetAtTime(p.am[2],t,.8);BED.g.gain.setTargetAtTime(on?p.am[3]:0,t,.5)}
-function nburst(ty,fr,d,v,t){var s=AC.createBufferSource();s.buffer=nbuf();var f=AC.createBiquadFilter(),g=AC.createGain();f.type=ty;f.frequency.value=fr;g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(v,t+d*.25);g.gain.exponentialRampToValueAtTime(.001,t+d);s.connect(f);f.connect(g);g.connect(AC.destination);s.start(t);s.stop(t+d+.05)}
-function drum(f0,f1,t){var o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+.12);g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.22)}
-function chirp(t){var o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.setValueAtTime(2400,t);o.frequency.exponentialRampToValueAtTime(3600,t+.1);g.gain.setValueAtTime(.02,t);g.gain.exponentialRampToValueAtTime(.001,t+.14);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.16)}
-function cevent(p,t){var e=p.ev;
-if(e==='horn'){var f=[370,415,466][(Math.random()*3)|0];tn(f,'square',.2,.018,t);tn(f*1.26,'square',.2,.014,t);if(Math.random()<.4){tn(f,'square',.2,.018,t+.3);tn(f*1.26,'square',.2,.014,t+.3)}}
-else if(e==='murmur')nburst('bandpass',500+Math.random()*500,.4,.03,t);
-else if(e==='thunder')nburst('lowpass',140,2.4,.16,t);
-else if(e==='bird'){chirp(t);chirp(t+.18);if(Math.random()<.5)chirp(t+.36)}}
-var c_music=music;
-music=function(){if(!AC||AC.state!=='running')return;var cn=CY().n,p=CSND[cn]||CSND.Lagos;
-if(mut){if(MON){bed(p,false);MON=false}return}
-if(!MON||cn!==MCITY){bed(p,true);MON=true;MCITY=cn}
-var now=AC.currentTime;if(MBT<now)MBT=now;
-while(MBT<now+.25){var s=MBS%16,t=MBT;
-if(p.K.indexOf(s)>-1)tn(60,'sine',.25,.2,t);
-if(p.C.indexOf(s)>-1){tn(240,'triangle',.12,.05,t);tn(1800,'square',.03,.012,t)}
-if(p.H&&s%p.H===1)tn(7000,'square',.04,.012,t);
-if(p.Q.indexOf(s)>-1)tn(520+((MBS>>4)%2)*40,'sine',.09,.04,t);
-if(p.D)p.D.forEach(function(d){if(d[0]===s)drum(d[1],d[2],t)});
-if(s%2===0)tn(p.B[(s/2)|0]*(s>7?1.5:1),'triangle',.22,.07,t);
-p.L.forEach(function(l){if(l[0]===s)tn(l[1],'triangle',.3,.045,t)});
-if(p.P&&s===0)p.P.forEach(function(f){tn(f,'sine',1.6,.03,t)});
-MBT+=p.st;MBS++}
-if(now>MNEXT){if(MNEXT>0)cevent(p,now+.05);MNEXT=now+p.et[0]+Math.random()*(p.et[1]-p.et[0])}};
-document.addEventListener('visibilitychange',function(){if(!AC)return;if(document.hidden){if(AC.state==='running')AC.suspend()}else if(AC.state==='suspended')AC.resume()});
-
-// ---- WhatsApp share card
-var RES=null;
-function shName(){try{return localStorage.getItem('nd_name')||''}catch(e){return''}}
-function shDraw(){var W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d');
-var g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0f2a1c');g.addColorStop(1,'#101820');x.fillStyle=g;x.fillRect(0,0,W,H);
-x.fillStyle='#128c3a';x.fillRect(0,0,W/3,40);x.fillStyle='#ffffff';x.fillRect(W/3,0,W/3,40);x.fillStyle='#128c3a';x.fillRect(2*W/3,0,W/3,40);
-x.textAlign='center';x.fillStyle='#f2b800';x.font='bold 96px sans-serif';x.fillText('NAIJA DASH',W/2,190,960);
-x.fillStyle='#ffffff';x.font='40px sans-serif';x.fillText('Drive Naija. Lagos to Kano.',W/2,255,960);
-var city=(typeof CY==='function'?CY().n:'Lagos'),car=CARS[sv.car]?CARS[sv.car].n:'';
-var big,sub,line;if(RES&&RES.k==='rank'){big='#'+RES.rank;sub='Weekly Tournament \u00b7 '+RES.city;line=RES.total+' points'}else{big=Math.floor(RES.d)+' m';sub='Classic Dash \u00b7 '+city;line=RES.c+' coins collected'}
-x.fillStyle='#ffffff';x.font='bold 300px sans-serif';x.fillText(big,W/2,700,960);
-x.fillStyle='#f2b800';x.font='bold 54px sans-serif';x.fillText(sub,W/2,800,960);
-x.fillStyle='#ffffff';x.font='46px sans-serif';x.fillText(line,W/2,880,960);
-var p=sv.pg||{xp:0},lv=pgLvl(p.xp||0),nm=shName();
-x.fillStyle='#ffffff99';x.font='40px sans-serif';x.fillText((nm?nm+' \u00b7 ':'')+'Level '+lv+(car?' \u00b7 '+car:''),W/2,980,960);
-x.fillStyle='#128c3a';x.fillRect(90,1080,W-180,150);x.fillStyle='#ffffff';x.font='bold 54px sans-serif';x.fillText('Can you beat me?',W/2,1150,880);x.font='40px sans-serif';x.fillText('app.naijadash.com',W/2,1205,880);
-return c}
-function shShare(){if(!RES)return;var txt=(RES.k==='rank'?'I ranked #'+RES.rank+' this week in Naija Dash!':'I drove '+Math.floor(RES.d)+' m in Naija Dash!')+' Can you beat me? https://app.naijadash.com';
-function fb(){window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank')}
-try{shDraw().toBlob(function(b){if(!b){fb();return}var f=new File([b],'naija-dash.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],text:txt}).catch(function(){})}else fb()},'image/png')}catch(e){fb()}}
-$('shr').onclick=shShare;
-var sh_endDash=endDash;endDash=function(){var t=tour,d=dist,c=coins;sh_endDash();if(!t&&d>0)RES={k:'dash',d:d,c:c}};
-setInterval(function(){var b=$('shr');if(b)b.classList.toggle('hide',!(RES&&st==='over'&&fl('share')))},700);
-
-// ---- live campaigns from the server, and ad statistics upload
-(function(){
-function loadCamps(){fetch('/api/campaigns').then(function(r){return r.json()}).then(function(j){if(!j||!j.campaigns)return;var hs=j.campaigns.some(function(c){return c.type==='house'});SPONSOR_CONFIG.campaigns=hs?j.campaigns:j.campaigns.concat([{id:'house-1',type:'house',status:'live',advertiser:'Naija Dash',cities:'all',lines:['NAIJA DASH','PLAY FREE'],c1:'#0b3d91',c2:'#f5b800',start:'2026-01-01',end:'2099-12-31'}])}).catch(function(){})}
-loadCamps();setInterval(loadCamps,300000);
-function uuid(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)})}
-function did(){try{var d=localStorage.getItem('nd_did');if(!d){d=uuid();localStorage.setItem('nd_did',d)}return d}catch(e){return undefined}}
-function upload(){var m=sv.ads&&sv.ads.m;if(!m)return;sv.ads.sent=sv.ads.sent||{};var days={},n=0;
-Object.keys(m).forEach(function(d){Object.keys(m[d]).forEach(function(k){if(k.split('|')[0]==='slang'||n>=150)return;var a=m[d][k],o=sv.ads.sent[d+'#'+k]||[0,0],ds=a[0]-o[0],dv=a[1]-o[1];if(ds<=0&&dv<=0)return;(days[d]=days[d]||{})[k]=[Math.max(0,Math.min(5000,ds)),Math.max(0,Math.min(5000,dv))];n++})});
-if(!n)return;var snap=JSON.parse(JSON.stringify(days));
-fetch('/api/ad-events',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({sid:uuid(),pid:did(),days:days}),keepalive:true}).then(function(r){if(!r.ok)return;Object.keys(snap).forEach(function(d){Object.keys(snap[d]).forEach(function(k){var o=sv.ads.sent[d+'#'+k]||[0,0];sv.ads.sent[d+'#'+k]=[o[0]+snap[d][k][0],o[1]+snap[d][k][1]]})});
-var keep=Object.keys(m);Object.keys(sv.ads.sent).forEach(function(x){if(keep.indexOf(x.split('#')[0])<0)delete sv.ads.sent[x]});save()}).catch(function(){})}
-setInterval(upload,90000);document.addEventListener('visibilitychange',function(){if(document.hidden)upload()});setTimeout(upload,20000);
-window.NDAdsUp=upload;
-})();
-
-// ---- live game settings from the admin console (maintenance, announcement, switches, prize text, version)
-var GAME_BUILD='2026-11-13';window.GAME_BUILD=GAME_BUILD;
-window.NDCFG=window.NDCFG||{};
-function fl(k){var c=window.NDCFG;return !(c&&c.flags&&c.flags[k]===false)}
-function escH(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-function cfgApply(){var c=window.NDCFG||{},m=c.maintenance;
-if(m&&m.on){$('maintt').textContent=m.msg||'Naija Dash is getting an upgrade. Back soon!';$('maint').classList.remove('hide')}else $('maint').classList.add('hide');
-var a=c.announcement;if(a&&a.on&&a.msg&&a.id&&sv.annSeen!==a.id&&$('ann').classList.contains('hide')&&!(m&&m.on)){$('annt').textContent=a.msg;$('ann').dataset.id=a.id;$('ann').classList.remove('hide')}
-$('updb').classList.toggle('hide',!(c.version&&c.version!==GAME_BUILD))}
-function cfgLoad(){fetch('/api/config').then(function(r){return r.json()}).then(function(j){if(j&&j.config){window.NDCFG=j.config;cfgApply()}}).catch(function(){})}
-$('annx').onclick=function(){sv.annSeen=$('ann').dataset.id;save();$('ann').classList.add('hide')};
-$('updb').onclick=function(){location.reload()};
-cfgLoad();setInterval(cfgLoad,120000);document.addEventListener('visibilitychange',function(){if(!document.hidden)cfgLoad()});
-
-// ---- ranked stages are reported to the server as they happen
-function rkUid(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)})}
-function rkDid(){try{var d=localStorage.getItem('nd_did');if(!d){d=rkUid();localStorage.setItem('nd_did',d)}return d}catch(e){return undefined}}
-var RKB=false;
-function rkPush(i,s,bd){var r=sv.rk;if(!r||r.wk!==WK||!r.id||r.done)return;r.q=r.q||[];if(r.q.some(function(x){return x.i===i}))return;r.q.push({i:i,s:s,bd:bd});save();rkFlushQ()}
-function rkFlushQ(){var r=sv.rk;if(!r||!r.q||!r.q.length||!rkUser())return Promise.resolve();if(RKB)return RKB;
-var step=function(){if(!r.q.length)return;var it=r.q[0];return rkCall('/api/runs/stage','POST',{run_id:r.id,i:it.i,score:it.s,bd:it.bd}).then(function(x){
-if(x.s===200){r.q.shift();save();return step()}
-if(x.s===409&&x.j&&x.j.error==='out_of_order'&&typeof x.j.expected==='number'){var have=r.q.map(function(q){return q.i}),add=[];for(var k=x.j.expected;k<it.i;k++)if(have.indexOf(k)<0&&TC&&TC.sc&&TC.sc[k]!==undefined){var b0=(TC.bd&&TC.bd[k])||{};add.push({i:k,s:Math.min(k===24?1500:1000,Math.max(0,Math.floor(TC.sc[k]||0))),bd:{t:b0.t|0,d:b0.d|0,r:b0.r|0,s:b0.s|0}})}if(add.length){r.q=add.concat(r.q);save();return step()}return}
-if(x.s>=400&&x.s<500&&x.s!==401&&x.s!==409){r.q.shift();save();return step()}})};
-RKB=Promise.resolve().then(step).catch(function(){}).then(function(){RKB=false});return RKB}
-var rk_tcNext=tcNext;tcNext=function(sc){try{var i=TC.i,b0=TCB||{};rkPush(i,Math.min(i===24?1500:1000,Math.max(0,Math.floor(sc||0))),{t:b0.t|0,d:b0.d|0,r:b0.r|0,s:b0.s|0})}catch(e){}rk_tcNext(sc)};
-
-})();
-</script><div id="boot" style="position:fixed;inset:0;z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#08131d;color:#fff;font:600 15px system-ui,sans-serif;text-align:center;padding:20px"><div style="font-size:28px;color:#f5b800;margin-bottom:10px">Naija Dash</div><div id="bt">Loading the 3D engine…</div></div>
-<script>(function(){var U=['https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js','https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js'],i=0,bt=document.getElementById('bt');
-function msg(m){bt.textContent=m}
-function go(){var g=document.createElement('script');g.textContent=document.getElementById('gsrc').textContent;document.body.appendChild(g);var b=document.getElementById('boot');if(b)b.parentNode.removeChild(b)}
-function load(){if(i>=U.length){msg('Could not load the 3D engine. Check your connection, then tap here to retry.');bt.onclick=function(){i=0;load()};return}
-var s=document.createElement('script'),done=false,to=setTimeout(function(){if(!done){done=true;i++;msg('Slow connection, trying another source…');load()}},10000);
-s.onload=function(){if(done)return;done=true;clearTimeout(to);msg('Starting…');setTimeout(go,30)};s.onerror=function(){if(done)return;done=true;clearTimeout(to);i++;msg('Trying another source…');load()};s.src=U[i];document.head.appendChild(s)}
-load()})();</script>
-<script>
-(function(){
-var C=window.NAIJA_CONFIG||{},U=C.SUPABASE_URL||'https://gilqteqdtwehwrqyapae.supabase.co',K=C.SUPABASE_ANON_KEY||'sb_publishable_eMOnlOA3gXljbwcSpKW-vg_ldYa-hfD';
-var $=function(i){return document.getElementById(i)},S=null,mode='in',pend='';
-function ld(){try{S=JSON.parse(localStorage.getItem('nd_auth'))}catch(e){S=null}}
-function st(x){S=x;try{if(x)localStorage.setItem('nd_auth',JSON.stringify(x));else localStorage.removeItem('nd_auth')}catch(e){}}
-function norm(d){if(!d||!d.access_token)return null;return{access_token:d.access_token,refresh_token:d.refresh_token,expires_at:d.expires_at||Math.floor(Date.now()/1000)+(d.expires_in||3600),email:(d.user&&d.user.email)||(S&&S.email)||'',id:(d.user&&d.user.id)||(S&&S.id)||''}}
-function post(p,b){return fetch(U+p,{method:'POST',headers:{apikey:K,'content-type':'application/json'},body:JSON.stringify(b)}).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}},function(){return{ok:r.ok,j:{}}})})}
-function em(j){var m=(j&&(j.msg||j.error_description||j.message))||'Something went wrong. Try again.';if(/invalid login/i.test(m))return'Wrong email or password.';if(/already registered/i.test(m))return'That email already has an account. Try signing in.';if(/password should be/i.test(m))return'Password must be at least 6 characters.';return m}
-function label(){var b=$('acct');if(b)b.textContent=S?'👤 '+(S.email||'Signed in')+' · Account':'👤 Sign in / Play as guest'}
-function render(){var on=!!S;$('aform').style.display=on?'none':'flex';$('aout').style.display=on?'':'none';$('aguest').textContent=on?'Close':'Play as guest';$('ah').textContent=on?'You are signed in':(mode==='in'?'Welcome back':'Join Naija Dash');$('asub').textContent=on?(S.email||''):(mode==='in'?'Sign in to keep your progress.':'Save your progress and enter the weekly tournament.');$('ago').textContent=mode==='in'?'Sign in':'Create account';$('aswap').textContent=mode==='in'?'New here? Create account':'Have an account? Sign in';$('amsg').textContent=pend;pend='';label()}
-function open(){render();$('auth').classList.remove('hide')}
-function close(){try{localStorage.setItem('nd_authseen','1')}catch(e){}$('auth').classList.add('hide')}
-window.NDAuth={user:function(){return S?{id:S.id,email:S.email}:null},token:function(){if(!S)return Promise.resolve(null);if(S.expires_at-60>Date.now()/1000)return Promise.resolve(S.access_token);return post('/auth/v1/token?grant_type=refresh_token',{refresh_token:S.refresh_token}).then(function(r){var n=r.ok?norm(r.j):null;if(n){st(n);return n.access_token}st(null);label();return null}).catch(function(){return S?S.access_token:null})},open:open};
-var SY={ready:false,tm:0,on:false};
-function snap(){var s=window.NDG.get();return{c:s.c,o:s.o.slice(0,10),car:s.car,sel:s.sel,b:s.b}}
-function prog(d){var n=0;for(var i=0;i<d.o.length;i++)if(d.o[i]&&i!==0&&i!==4)n++;return n*1000000+d.b[0]+d.b[1]}
-function sapi(m,body){return window.NDAuth.token().then(function(t){if(!t)return null;return fetch((C.API_BASE||'')+'/api/save',{method:m,headers:{authorization:'Bearer '+t,'content-type':'application/json'},body:body?JSON.stringify(body):undefined}).then(function(r){return r.json().then(function(j){return{status:r.status,j:j}},function(){return{status:r.status,j:{}}})})}).catch(function(){return null})}
-function waitG(f,n){if(window.NDG){f();return}if(n>100)return;setTimeout(function(){waitG(f,n+1)},300)}
-function merge(l,c){var hi=prog(c)>=prog(l)?c:l,o=[];for(var i=0;i<10;i++)o.push((l.o[i]||c.o[i])?1:0);return{c:hi.c,o:o,car:hi.car,sel:hi.sel,b:[Math.max(l.b[0],c.b[0]),Math.max(l.b[1],c.b[1])]}}
-function push(){if(!S||!SY.ready)return;sapi('PUT',{data:snap()}).then(function(r){if(r&&r.status===409&&r.j&&r.j.save){window.NDG.apply(merge(snap(),r.j.save.data));sapi('PUT',{data:snap()})}else if(r&&r.status===200&&r.j&&r.j.clamped&&r.j.data){window.NDG.apply(r.j.data)}})}
-window.NDSync={dirty:function(){if(!S||!SY.ready)return;clearTimeout(SY.tm);SY.tm=setTimeout(push,4000)},stop:function(){SY.ready=false;SY.on=false},
-pull:function(){if(!S||SY.on)return;SY.on=true;waitG(function(){sapi('GET').then(function(r){if(!r||r.status!==200){SY.on=false;return}var c=r.j&&r.j.save;if(c&&c.data){var m=merge(snap(),c.data);window.NDG.apply(m)}SY.ready=true;sapi('PUT',{data:snap()}).then(function(){var b=$('acct');if(b&&S)b.textContent='👤 '+(S.email||'Signed in')+' · ☁ Saved'})})},0)}};
-ld();
-var h=location.hash;
-if(h.indexOf('access_token=')>-1){var p=new URLSearchParams(h.slice(1)),t=p.get('access_token');if(t){S={access_token:t,refresh_token:p.get('refresh_token'),expires_at:Math.floor(Date.now()/1000)+(+p.get('expires_in')||3600),email:'',id:''};st(S);fetch(U+'/auth/v1/user',{headers:{apikey:K,authorization:'Bearer '+t}}).then(function(r){return r.json()}).then(function(u){if(S){S.email=u.email||'';S.id=u.id||'';st(S);label();NDSync.pull()}}).catch(function(){})}history.replaceState(null,'',location.pathname+location.search)}
-else if(h.indexOf('error_description=')>-1){pend='Google sign-in failed. Try again or use email.';history.replaceState(null,'',location.pathname+location.search)}
-function go(){var e=$('aemail').value.trim(),w=$('apass').value;if(!e||w.length<6){$('amsg').textContent='Enter your email and a password of 6+ characters.';return}$('amsg').textContent='Please wait...';$('ago').disabled=true;
-var q=mode==='in'?post('/auth/v1/token?grant_type=password',{email:e,password:w}):post('/auth/v1/signup',{email:e,password:w});
-q.then(function(r){$('ago').disabled=false;var n=r.ok?norm(r.j):null;if(n){if(!n.email)n.email=e;st(n);render();NDSync.pull();$('amsg').textContent='Signed in. Your progress is saved to your account.';return}if(r.ok&&mode==='up'){$('amsg').textContent='Account created. Check your email to confirm, then sign in.';return}$('amsg').textContent=em(r.j)}).catch(function(){$('ago').disabled=false;$('amsg').textContent='No connection. Try again.'})}
-function boot(){
-if(!$('auth'))return;
-$('acct').onclick=open;$('aguest').onclick=close;$('aswap').onclick=function(){mode=mode==='in'?'up':'in';$('amsg').textContent='';render()};$('ago').onclick=go;
-$('aout').onclick=function(){NDSync.stop();st(null);$('amsg').textContent='Signed out.';render()};
-$('agoogle').onclick=function(){var home=/(\.pages\.dev|naijadash\.com)$/.test(location.hostname)?location.origin+'/':'https://app.naijadash.com/';location.href=U+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent(home)};
-['aemail','apass'].forEach(function(i){var el=$(i);['keydown','keyup','keypress'].forEach(function(ev){el.addEventListener(ev,function(e){e.stopPropagation();if(ev==='keydown'&&e.key==='Enter')go()})})});
-label();if(S)NDSync.pull();var seen=false;try{seen=!!localStorage.getItem('nd_authseen')}catch(e){}
-if(pend)open();else if(!S&&!seen)setTimeout(open,800)}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
-})();
-</script>
-<script>
-(function(){function $(i){return document.getElementById(i)}
-function lay(){var t=$('top');if(!t||!t.firstElementChild)return;var y=t.firstElementChild.getBoundingClientRect().bottom+6,tc=$('tcc'),m=$('msg');
-if(tc&&!tc.classList.contains('hide')){tc.style.top=y+'px';y+=tc.offsetHeight+6}
-if(m)m.style.top=y+'px'}
-setInterval(lay,200)})();
-</script>
-<script>
-(function(){
-var $=function(i){return document.getElementById(i)},dip=null,asked=false;
-window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dip=e});
-function sa(m,b){return NDAuth.token().then(function(t){if(!t)return null;return fetch('/api/profile',{method:m,headers:{authorization:'Bearer '+t,'content-type':'application/json'},body:b?JSON.stringify(b):undefined}).then(function(r){return r.json().then(function(j){return{s:r.status,j:j}},function(){return{s:r.status,j:{}}})})}).catch(function(){return null})}
-function sn(n){try{localStorage.setItem('nd_name',n)}catch(e){}}
-function gn(){try{return localStorage.getItem('nd_name')||''}catch(e){return''}}
-function openP(){var u=NDAuth.user();$('pemail').textContent=u?u.email:'';$('pname').value=gn();$('pnmsg').textContent='';
-var sa2=window.matchMedia&&matchMedia('(display-mode: standalone)').matches;
-$('pinst').style.display=sa2?'none':'';$('pinfo').textContent=sa2?'':(dip?'':'Or open your browser menu and tap Add to Home screen.');
-$('prof').classList.remove('hide');
-sa('GET').then(function(r){if(r&&r.s===200&&r.j){if(r.j.display_name&&!r.j.is_default){sn(r.j.display_name);$('pname').value=r.j.display_name}else{$('pnmsg').textContent='Choose a public name. Your email stays private.'}}})}
-function msg(c){return({bad_length:'Use 3 to 20 characters.',bad_chars:'Letters, numbers, spaces, _ . - only.',not_allowed:'That name is not allowed.',name_taken:'That name is already taken.',banned:'This account cannot change its name.',unauthorized:'Please sign in again.'})[c]||'Could not save. Try again.'}
-function boot(){
-if(!$('prof'))return;
-var wa=$('psup');wa.href='https://wa.me/2349047867372?text='+encodeURIComponent('Hello Naija Dash support');
-$('acct').onclick=function(){if(NDAuth.user())openP();else NDAuth.open()};
-$('pclose').onclick=function(){$('prof').classList.add('hide')};
-$('pout').onclick=function(){$('prof').classList.add('hide');$('aout').click()};
-$('psave').onclick=function(){var n=$('pname').value;$('pnmsg').textContent='Saving...';sa('PUT',{display_name:n}).then(function(r){if(!r){$('pnmsg').textContent='No connection. Try again.';return}if(r.s===200&&r.j.ok){sn(r.j.display_name);$('pname').value=r.j.display_name;$('pnmsg').textContent='Saved. This is your name on the leaderboard.'}else $('pnmsg').textContent=msg(r.j&&r.j.error)})};
-$('pinst').onclick=function(){if(dip){dip.prompt();dip=null}else $('pinfo').textContent='Open your browser menu and tap Add to Home screen.'};
-var R=[100,150,200,250,300,400,600];
-function dk(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
-function info(){var s=window.NDG.get(),t=dk(new Date()),y=dk(new Date(Date.now()-864e5)),dr=s.dr||{d:'',s:0},nx=dr.d===y?dr.s+1:(dr.d===t?dr.s:1);return{t:t,claim:dr.d!==t,streak:nx,amt:R[(nx-1)%7]}}
-var b=$('dly');
-b.onclick=function(){if(!window.NDG)return;var i=info(),s=NDG.get();if(!i.claim)return;s.c+=i.amt;s.dr={d:i.t,s:i.streak};NDG.save();NDG.gui();b.dataset.busy='1';b.textContent='Claimed +\u20a6'+i.amt+' \u00b7 streak '+i.streak;setTimeout(function(){delete b.dataset.busy;b.classList.add('hide')},2500)};
-setInterval(function(){if(!window.NDG)return;var i=info();if(i.claim&&!(window.NDCFG&&window.NDCFG.flags&&window.NDCFG.flags.daily===false)){b.textContent='\ud83c\udf81 Daily reward \u00b7 day '+i.streak+' \u00b7 +\u20a6'+i.amt;b.classList.remove('hide')}else if(!b.dataset.busy)b.classList.add('hide');
-if(!asked&&NDAuth.user()&&$('auth').classList.contains('hide')){asked=true;sa('GET').then(function(r){if(!r||r.s!==200||!r.j)return;if(r.j.is_default&&!gn())openP();else if(r.j.display_name&&!r.j.is_default)sn(r.j.display_name)})}},2000)}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
-})();
-</script>
-<script>
-(function(){
-var $=function(i){return document.getElementById(i)};
-function uid(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)})}
-function did(){try{var d=localStorage.getItem('nd_did');if(!d){d=uid();localStorage.setItem('nd_did',d)}return d}catch(e){return undefined}}
-var sent=0,seen={};
-function rep(m,src,line){if(sent>=5||!m)return;m=String(m).slice(0,200);if(seen[m])return;seen[m]=1;sent++;try{fetch('/api/errors',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({msg:m,src:String(src||'').split('/').pop().slice(0,100),line:line,build:window.GAME_BUILD||'',ua:(navigator.userAgent||'').slice(0,160),did:did()}),keepalive:true}).catch(function(){})}catch(e){}}
-window.addEventListener('error',function(e){rep(e.message,e.filename,e.lineno)});
-window.addEventListener('unhandledrejection',function(e){rep('Promise: '+((e.reason&&e.reason.message)||e.reason),'',0)});
-function boot(){if(!$('fb'))return;
-$('fbm').onclick=function(){$('fbm2').textContent='';$('fb').classList.remove('hide')};
-$('fbc').onclick=function(){$('fb').classList.add('hide')};
-$('fbs').onclick=function(){var m=$('fbt').value.trim();if(m.length<3){$('fbm2').textContent='Please write a few words.';return}$('fbm2').textContent='Sending...';
-var ctx=innerWidth+'x'+innerHeight+' '+(((navigator.userAgent||'').match(/\(([^)]*)\)/)||['',''])[1]).slice(0,120);
-(window.NDAuth?NDAuth.token():Promise.resolve(null)).then(function(t){var h={'content-type':'application/json'};if(t)h.authorization='Bearer '+t;return fetch('/api/feedback',{method:'POST',headers:h,body:JSON.stringify({kind:$('fbk').value,message:m,build:window.GAME_BUILD||'',ctx:ctx,did:did()})})}).then(function(r){if(r.ok){$('fbt').value='';$('fbm2').textContent='Thank you! We read every message.';setTimeout(function(){$('fb').classList.add('hide')},1500)}else $('fbm2').textContent=r.status===429?'You have sent a lot just now. Please try again later.':'Could not send. Try again.'}).catch(function(){$('fbm2').textContent='No connection. Try again.'})}}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
-})();
-</script>
-<script src="https://checkout.flutterwave.com/v3.js"></script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').catch(function(err) {});
-  });
-}
 </script>
 </body></html>
 
