@@ -26,7 +26,8 @@ button{font:inherit;color:var(--text);border:0;cursor:pointer}
 #gar{display:flex;gap:6px;align-items:center;margin-top:8px}#gar button{background:#ffffff22;border-radius:10px;padding:10px 12px}#cn{flex:1;background:#ffffff14;border-radius:10px;padding:8px}
 .bt.p2{background:#6a2c91}#wsh{position:fixed;inset:0;pointer-events:none;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);background:radial-gradient(circle at 20% 30%,#ffffff44 0 3px,transparent 4px),radial-gradient(circle at 70% 55%,#ffffff44 0 4px,transparent 5px),radial-gradient(circle at 45% 75%,#ffffff44 0 3px,transparent 4px),#ffffff12}#c2{position:fixed;right:8px;top:calc(env(safe-area-inset-top,0px) + 200px);display:flex;flex-direction:column;gap:5px}#c2 button{width:46px;height:36px;font-size:18px;padding:0}#c2 .on{outline:2px solid var(--gold);background:#5a4300}.bt.w{background:#fff;color:#0a3d1c}.lb{display:flex;justify-content:space-between;padding:5px 9px;border-radius:8px;font-weight:600;text-align:left}.lb.me{background:#f5b80033;color:var(--gold)}.lb small{color:#9fc7a8}
 .hide{display:none!important}
-</style><script>window.addEventListener('error',function(e){try{var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:99999;background:#7a1010;color:#fff;font:12px/1.4 system-ui;padding:10px;border-radius:10px;white-space:pre-wrap;max-height:40vh;overflow:auto';document.documentElement.appendChild(d)}d.textContent='Game error (send me a screenshot of this):\n'+(e.message||'')+' line '+(e.lineno||'?')}catch(x){}});</script></head><body>
+</style><script>window.addEventListener('error',function(e){try{var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:99999;background:#7a1010;color:#fff;font:12px/1.4 system-ui;padding:10px;border-radius:10px;white-space:pre-wrap;max-height:40vh;overflow:auto';document.documentElement.appendChild(d)}d.textContent='Game error (send me a screenshot of this):\n'+(e.message||'')+' line '+(e.lineno||'?')}catch(x){}});</script><link rel="manifest" href="/manifest.json">
+</head><body>
 <canvas id="c"></canvas>
 <div id="top"><div class="p"><b id="b">0</b> <span id="u">m</span><br><span id="s"></span><div class="bar" id="bw"><i id="dm"></i></div></div>
 <div class="p hide" id="aw" style="text-align:center"><span id="ar">▲</span><br><span id="ds"></span></div>
@@ -156,6 +157,9 @@ $('th').onclick=function(){ti=(ti+1)%3;theme()};
 function fmt(t){t=Math.floor(t);return Math.floor(t/60)+':'+('0'+t%60).slice(-2)}
 function clearG(){if(G)S.remove(G);G=new T.Group();S.add(G);OB=[];objs=[];scr=[];bld=[];npcs=[];sk=[]}
 function menu(t,b){st='menu';$('wsh').classList.add('hide');$('c2').classList.add('hide');tour=false;rnd=Math.random;$('tc').classList.add('hide');mode='';clearG();gnd.visible=true;pick();$('ct').textContent=t;$('cb').textContent=b;$('card').classList.remove('hide');$('ctl').classList.add('hide');$('cm').classList.add('hide');$('gr').classList.add('hide');$('aw').classList.add('hide');gui()}
+
+function hap(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch(e){} }
+
 // ---- DASH
 var LN=[-2.6,0,2.6],lane,px,v,dist,coins,nextRow,shake,TAUNT=['Oya enter!','Ojuelegba! Ojuelegba!','Moni moni!','Yaba left!','Oshodi! Oshodi!'],tI=0;
 function buildDash(){clearG();adRefresh();G.add(B(10.4,.4,440,0x2b2f36,0,-.2,-190));var w=new T.Mesh(new T.PlaneGeometry(700,700),M(0x1f6f8b,.25,.3));w.rotation.x=-Math.PI/2;w.position.y=-5;G.add(w);
@@ -1142,7 +1146,7 @@ var last=performance.now();
 function loop(now){requestAnimationFrame(loop);if(!sv.lowAuto&&st==='play'&&(now-last)<500){var fq=window.__fq||(window.__fq={n:0,t:0});fq.n++;fq.t+=now-last;if(fq.n>=150){sv.lowAuto=1;if(fq.t/fq.n>26&&!LOW){LOW=true;sv.low=1;tg();say('Low graphics on for smoother play',3)}save()}}var dt=Math.min(.05,(now-last)/1000);last=now;music();if(TC.on){if(st==='play'){TC.t-=dt;if(TC.t<=0){tcEnd(true);return}}var tcc=$('tcc');tcc.classList.toggle('hide',st!=='play');tcc.textContent='⏱ '+fmt(TC.t)+' · stage '+(TC.i+1)+'/'+TC.tl.length+' · '+sig(TC.i).n+' · total '+tsum()}if(mode==='drive'&&G&&!L.on&&st==='play')LLstep(dt,now);
 if(mode==='dash'&&G){if(st==='play'){v=Math.min(46,18+dist/55)*(tour?1:cs().sp);var mv=v*dt*(AD?1+.4*AD.sl:LD?1+.05*LD.p:KD&&KD.b?1.2:PD&&PD.sq?1.25:ED?ED.m:1);dist+=mv;if(AD)adStep(dt,mv);if(KD)kdStep(dt);if(PD)pdStep(dt);if(ED)edStep(dt);nextRow-=mv;if(nextRow<=0){row();nextRow=Math.max(14,26-dist/120)}
 for(i=objs.length-1;i>=0;i--){var o=objs[i];o.g.position.z+=mv;if(o.t==='c')o.g.rotation.y+=dt*4;
-if(Math.abs(o.g.position.z)<o.hz+1.8&&Math.abs(o.g.position.x-px)<o.hx+.8){if(o.t==='c'){coins++;if(LD){LD.p=Math.min(8,LD.p+1);if(LD.p===8)say('🚌 Full bus! Fare multiplier maxed.',1.5)}G.remove(o.g);objs.splice(i,1);if(coins%10===0)say(TAUNT[tI++%5],1.2);continue}if(o.t==='p'){if(LD)LD.p=Math.max(0,LD.p-2);v=Math.max(14,v*.6);shake=.25;G.remove(o.g);objs.splice(i,1);continue}if(rvOffer()){break}endDash();break}
+if(Math.abs(o.g.position.z)<o.hz+1.8&&Math.abs(o.g.position.x-px)<o.hx+.8){if(o.t==='c'){coins++; hap(25);if(LD){LD.p=Math.min(8,LD.p+1);if(LD.p===8)say('🚌 Full bus! Fare multiplier maxed.',1.5)}G.remove(o.g);objs.splice(i,1);if(coins%10===0)say(TAUNT[tI++%5],1.2);continue}if(o.t==='p'){if(LD)LD.p=Math.max(0,LD.p-2);v=Math.max(14,v*.6);shake=.25;G.remove(o.g);objs.splice(i,1);continue}if(rvOffer()){break}hap([80, 50, 80]); endDash();break}
 if(o.g.position.z>10){G.remove(o.g);objs.splice(i,1)}}
 $('b').textContent=Math.floor(dist);$('s').textContent=tour?'⏱ '+Math.max(0,Math.ceil(tT))+' s · ₦'+coins+(AD?adH():LD?' · 🚌 x'+(1+.05*LD.p).toFixed(2):KD&&KD.b?' · 🌫 dust x1.2':PD&&PD.sq?' · 🌧 squall x1.25':ED?edH():''):'₦'+coins+' · best '+sv.b[0]+(AD?adH():LD?' · 🚌 x'+(1+.05*LD.p).toFixed(2):KD&&KD.b?' · 🌫 dust x1.2':PD&&PD.sq?' · 🌧 squall x1.25':ED?edH():'');if(tour&&st==='play'){tT-=dt;if(tT<=0)endTour(1)}}
 var dx=LN[lane]-px;px+=dx*Math.min(1,dt*(PD&&PD.sq?5:11));me.position.set(px,0,0);me.rotation.set(0,-dx*.05,-dx*.06);
@@ -1463,4 +1467,11 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 <script src="https://checkout.flutterwave.com/v3.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(err) {});
+  });
+}
+</script>
 </body></html>
