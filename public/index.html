@@ -42,6 +42,33 @@ button{font:inherit;color:var(--text);border:0;cursor:pointer}
 
 
 
+
+<style id="naija-touch-fix">
+  /* Enable touch interaction and prevent browser gesture locking on all UI */
+  button, .bt, [id*="Btn"], [id*="b"], input, select, a, #card, #tc, #top, #ctl {
+    touch-action: manipulation !important;
+    pointer-events: auto !important;
+  }
+</style>
+<script id="naija-touch-script">
+// Convert mobile touch taps instantly into clicks before canvas handlers swallow them
+window.addEventListener("touchstart", function(e) {
+  var t = e.target.closest("button, .bt, [id*='Btn'], [id*='b']");
+  if (t) {
+    t.style.transform = "scale(0.95)";
+  }
+}, { passive: true });
+
+window.addEventListener("touchend", function(e) {
+  var t = e.target.closest("button, .bt, [id*='Btn'], [id*='b']");
+  if (t) {
+    t.style.transform = "none";
+    e.preventDefault();
+    t.click();
+  }
+}, { passive: false });
+</script>
+
 </body></html>
 
 <!-- Build update: 1794791598653 -->
