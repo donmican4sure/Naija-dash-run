@@ -43,30 +43,49 @@ button{font:inherit;color:var(--text);border:0;cursor:pointer}
 
 
 
-<style id="naija-touch-fix">
-  /* Enable touch interaction and prevent browser gesture locking on all UI */
-  button, .bt, [id*="Btn"], [id*="b"], input, select, a, #card, #tc, #top, #ctl {
-    touch-action: manipulation !important;
+
+
+
+
+<style id="naija-architecture-fix">
+  /* Canvas sits at the bottom layer and never blocks clicks/touches */
+  canvas#c {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    pointer-events: none !important;
+  }
+
+  /* All UI overlays, cards, modals, and buttons sit securely on top and capture clicks */
+  #card, #tc, #streakModal, #rev, #adv, #top, #ctl, .menu-overlay, button, .bt, [id*="Btn"], [id*="b"] {
+    position: relative;
+    z-index: 999999 !important;
     pointer-events: auto !important;
+    touch-action: manipulation !important;
+    cursor: pointer !important;
+  }
+
+  /* Ensure driving controls maintain touch capability during gameplay */
+  #wh, #ped, #gas, #brk {
+    pointer-events: auto !important;
+    touch-action: none !important;
   }
 </style>
-<script id="naija-touch-script">
-// Convert mobile touch taps instantly into clicks before canvas handlers swallow them
-window.addEventListener("touchstart", function(e) {
-  var t = e.target.closest("button, .bt, [id*='Btn'], [id*='b']");
-  if (t) {
-    t.style.transform = "scale(0.95)";
-  }
-}, { passive: true });
 
-window.addEventListener("touchend", function(e) {
-  var t = e.target.closest("button, .bt, [id*='Btn'], [id*='b']");
-  if (t) {
-    t.style.transform = "none";
-    e.preventDefault();
-    t.click();
+<script id="naija-architecture-script">
+// Force-check pointer events on every DOM mutation or menu toggle
+setInterval(function() {
+  var canvas = document.getElementById("c");
+  if (canvas) {
+    canvas.style.pointerEvents = "none";
   }
-}, { passive: false });
+  
+  // Ensure all buttons are clickable
+  var interactiveElements = document.querySelectorAll("button, .bt, [id*='Btn'], [id*='b']");
+  interactiveElements.forEach(function(el) {
+    el.style.pointerEvents = "auto";
+  });
+}, 200);
 </script>
 
 </body></html>

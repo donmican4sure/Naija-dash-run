@@ -1,4 +1,4 @@
-const CACHE_NAME = 'naijadash-cache-v1794793745946';
+const CACHE_NAME = 'naijadash-cache-v1794794075831';
 const ASSETS = [
   '/',
   '/index.html',
