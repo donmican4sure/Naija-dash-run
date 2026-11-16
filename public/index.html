@@ -125,7 +125,22 @@ button{font:inherit;color:var(--text);border:0;cursor:pointer}
 <button class="bt hide" id="msb" style="background:#2b3947;font-size:13px"></button><div style="display:flex;gap:6px"><button class="bt" id="cyb" style="background:#2b3947;font-size:13px"></button><button class="bt hide" id="cyu" style="background:#c98a00;font-size:13px"></button></div><button class="bt hide" id="shr" style="background:#25d366;color:#04361b">📤 Share score on WhatsApp</button><button class="bt y hide" id="dly"></button><button class="bt" id="pgb" style="background:#2b3947;font-size:14px">Level 1 · Daily challenges 0/3</button><button class="bt" id="acct" style="background:#2b3947;font-size:13px">👤 Sign in / Play as guest</button><button class="bt" id="fbm" style="background:#2b3947;font-size:13px">💬 Send feedback</button><button class="bt" id="advb" style="background:#2b3947;font-size:13px">📣 Advertise / Sponsor</button><button class="bt" id="gbtn" style="background:#2b3947">🛠 Garage and Shop</button><div style="display:flex;gap:6px"><button class="bt" id="pro" style="background:#ffffff22;font-size:13px"></button><button class="bt" id="lowg" style="background:#ffffff22;font-size:13px"></button></div><button class="bt" id="m1">🏁 Classic Dash</button><button class="bt y" id="m2">🚕 Doctor Drive · Naija Mission</button><button class="bt hide" id="lcb" style="background:#2b3947;font-size:13px"></button><button class="bt p2" id="m4">🎓 Licence Challenge</button><button class="bt w" id="m3">🏆 Weekly Tournament</button></div>
 <div id="tc" class="hide"></div><div id="adv" class="hide" style="position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.55);display:flex;align-items:flex-end"></div><div id="gx" class="hide" style="position:fixed;left:0;right:0;bottom:0;max-height:54vh;overflow:auto;background:var(--panel);backdrop-filter:blur(6px);border-radius:18px 18px 0 0;padding:12px 12px calc(12px + env(safe-area-inset-bottom,0px));box-sizing:border-box"></div>
 
-<script type="text/plain" id="gsrc">var board = document.getElementById("tc") || { innerHTML: "" };
+<script type="text/plain" id="gsrc">
+    function board(tr){
+      var a = [];
+      if(sv.t && sv.t.b && sv.t.b[tr] > 0) {
+        a.push({n: 'You', s: sv.t.b[tr], me: 1});
+      }
+      var bots = ['Oga Driver', 'Lagos Boy', 'Danfo King', 'Kano Rider', 'Express Boss'];
+      bots.forEach(function(bName, idx){
+        var score = Math.max(100, (sv.t && sv.t.b && sv.t.b[tr] ? sv.t.b[tr] : 500) - (idx + 1) * 120);
+        a.push({n: bName, s: score, me: 0});
+      });
+      a.sort(function(x, y){ return y.s - x.s; });
+      return a;
+    }
+    
+var board = document.getElementById("tc") || { innerHTML: "" };
 
 (function(){
 var $=function(i){return document.getElementById(i)};
@@ -252,7 +267,7 @@ function startDash(t){tour=!!t;rnd=t?mul(sv.t.wk*2654435761):Math.random;tT=90;$
 function row(){var free=AD?adFree():Math.floor(rnd()*3),n=rnd()<.45?2:1,od=[0,1,2].filter(function(l){return l!==free}).sort(function(){return rnd()-.5});
 for(var k=0;k<n;k++){var l=od[k],r=rnd(),t=r<.4?'o':r<.7?'k':'p',g=t==='o'?okada():t==='k'?keke():pot();g.position.set(LN[l],0,-125);G.add(g);objs.push({g:g,t:t,hx:t==='o'?.4:t==='k'?.8:.9,hz:t==='o'?.9:t==='k'?1:.9})}
 if(rnd()<.75)for(var c=0;c<4;c++){var cg=coin();cg.position.set(LN[free],1,-125-c*3);G.add(cg);objs.push({g:cg,t:'c',hx:.7,hz:.6})}}
-function nx(){var b=null;CARS.forEach(function(c,i){if(c.p>0&&!sv.o[i]&&(!b||c.p<b.p))b=c});return b?(b.p<=sv.c?' · You can buy the '+b.n+' now!':' · Next: '+b.n+' (₦'+(b.p-sv.c)+' to go)'):''}function endDash(){if(tour){endTour(0);return}st='over';var coinCash=coins;var distCash=Math.floor(dist/10);var totalCash=coinCash+distCash;sv.c+=totalCash;var nb=Math.floor(dist)>sv.b[0];if(nb)sv.b[0]=Math.floor(dist);save();shake=.6;menu('Wahala! You crash','Coins: '+coins+' (+\u20a6'+coinCash+') | Dist: '+Math.floor(dist)+'m (+\u20a6'+distCash+') · Total: +\u20a6'+totalCash+(nb?' · NEW BEST!':'')+' · Wallet: ₦'+sv.c+nx());;if(sv.t.b[tr]>0)a.push({n:'You',s:sv.t.b[tr],me:1});a.sort(function(x,y){return y.s-x.s});return a}
+function nx(){var b=null;CARS.forEach(function(c,i){if(c.p>0&&!sv.o[i]&&(!b||c.p<b.p))b=c});return b?(b.p<=sv.c?' · You can buy the '+b.n+' now!':' · Next: '+b.n+' (₦'+(b.p-sv.c)+' to go)'):''}function endDash(){if(tour){endTour(0);return}st='over';var coinCash=coins;var distCash=Math.floor(dist/10);var totalCash=coinCash+distCash;sv.c+=totalCash;var nb=Math.floor(dist)>sv.b[0];if(nb)sv.b[0]=Math.floor(dist);save();shake=.6;menu('Wahala! You crash','Coins: '+coins+' (+\u20a6'+coinCash+') | Dist: '+Math.floor(dist)+'m (+\u20a6'+distCash+') · Total: +\u20a6'+totalCash+(nb?' · NEW BEST!':'')+' · Wallet: ₦'+sv.c+nx());;var tr=tourTab;if(sv.t.b[tr]>0)a.push({n:'You',s:sv.t.b[tr],me:1});a.sort(function(x,y){return y.s-x.s});return a}
 function rank(tr){var b=board(tr);for(var k=0;k<b.length;k++)if(b[k].me)return '#'+(k+1)+' of '+b.length;return '-'}
 function endTour(up){if(TC.on){st='over';shake=.6;TCB=null;tcNext(Math.min(1500,Math.floor(dist)+coins*10));return}st='over';var t=sv.t,tr=0,pts=Math.floor(dist)+coins*10;t.att--;var nb=pts>t.b[tr];if(nb)t.b[tr]=pts;save();shake=.6;menu(up?'Time up! See your score':'Crash! Attempt don end','Score '+pts+' (distance '+Math.floor(dist)+' + coins '+coins+'×10)'+(nb?' · NEW BEST!':'')+' · rank '+rank(tr)+' · attempts left '+t.att)}
 function renderTour(){var t=sv.t,tr=tourTab,b=board(tr),h='<h1>🏆 '+WEEKS[WK%4].n.toUpperCase()+'</h1><div class="g"></div><p>This week: <b>'+CITIES[WK%5].n+'</b>'+presented()+' · prizes coming soon</p><p style="font-size:12px">Free to enter. One 40-minute championship of 25 stages: licence skills, long legs (comfort, limits, rush, hazards, sirens), street yield, the city signature stage and a Dash sprint. Progress saves after each stage. Same stages for everyone. Car colours are cosmetic only.</p><div style="margin-top:8px">';
