@@ -1363,6 +1363,69 @@ document.addEventListener("click", function(e) {
 });
 </script>
 
+
+<script>
+// ---- Universal Click Delegation & UI Fixes ----
+document.addEventListener("click", function(e) {
+  var t = e.target;
+  if (!t) return;
+  
+  // Daily Streak Claim
+  if (t.id === "claimStreakBtn" || t.closest("#claimStreakBtn")) {
+    if (typeof getStreakInfo === "function" && window.NDG && window.NDG.get) {
+      var inf = getStreakInfo();
+      var s = window.NDG.get();
+      s.c = (s.c || 0) + inf.amt;
+      s.dr = { d: inf.t, s: inf.streak };
+      if (typeof window.NDG.save === "function") window.NDG.save();
+      if (typeof window.NDG.gui === "function") window.NDG.gui();
+      if (typeof say === "function") say("Daily reward claimed! +₦" + inf.amt, 3);
+      var m = document.getElementById("streakModal");
+      if (m) m.classList.add("hide");
+    }
+  }
+  
+  // Close Streak Modal
+  if (t.id === "closeStreakBtn" || t.closest("#closeStreakBtn")) {
+    var m = document.getElementById("streakModal");
+    if (m) m.classList.add("hide");
+  }
+});
+
+// Expose Flutterwave payment handler globally
+window.payWithFlutterwave = function(amount, coinPack) {
+  if (typeof FlutterwaveCheckout === "undefined") {
+    alert("Payment gateway loading... Please check your internet connection.");
+    return;
+  }
+  var user = window.NDAuth && window.NDAuth.user ? window.NDAuth.user() : { email: "player@naijadash.com", phone: "08000000000", name: "Naija Dash Player" };
+  FlutterwaveCheckout({
+    public_key: "FLWPUBK_TEST-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-X",
+    tx_ref: "ND_" + Date.now(),
+    amount: amount,
+    currency: "NGN",
+    payment_options: "card,mobilemoney,ussd",
+    customer: {
+      email: user.email || "player@naijadash.com",
+      phone_number: user.phone || "08000000000",
+      name: user.name || "Naija Dash Player"
+    },
+    callback: function (data) {
+      if (data.status === "successful" || data.status === "completed") {
+        if (window.NDG && window.NDG.get) {
+          var s = window.NDG.get();
+          s.c = (s.c || 0) + coinPack;
+          window.NDG.save();
+          window.NDG.gui();
+        }
+        alert("Payment successful! Added " + coinPack.toLocaleString() + " coins to your wallet.");
+      }
+    },
+    onclose: function() {}
+  });
+};
+</script>
+
 </body></html>
 
 <!-- Build update: 1794791598653 -->
