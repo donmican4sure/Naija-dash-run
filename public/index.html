@@ -59,21 +59,27 @@ button{font:inherit;color:var(--text);border:0;cursor:pointer}
 </style>
 
 
-<style id="naija-dash-ui-fix">
-  /* Force game canvas behind UI and ensure touch interaction works */
+
+
+
+<style id="naija-core-fix">
+  html, body {
+    pointer-events: auto !important;
+    touch-action: auto !important;
+    overflow: auto !important;
+  }
   canvas {
-    position: absolute !important;
+    position: fixed !important;
     inset: 0 !important;
-    z-index: 1 !important;
+    z-index: 0 !important;
     pointer-events: auto !important;
   }
-  
-  /* Force all UI overlays, modals, menus, and buttons to sit on top and capture input */
-  #streakModal, .modal, .menu-overlay, #menu, #ui, #tcc, #rev, #adv, button, .bt, [id*="Btn"], [id*="b"] {
-    position: relative;
-    z-index: 99999 !important;
+  #card, #tc, #streakModal, #rev, #adv, #top, #ctl, .menu-overlay {
+    z-index: 10000 !important;
     pointer-events: auto !important;
-    touch-action: manipulation !important;
+  }
+  button, .bt, [id*="Btn"], [id*="b"] {
+    pointer-events: auto !important;
     cursor: pointer !important;
   }
 </style>
@@ -1466,68 +1472,7 @@ window.payWithFlutterwave = function(amount, coinPack) {
 </script>
 
 
-<script id="naija-dash-event-fix">
-document.addEventListener("click", function(e) {
-  var t = e.target;
-  if (!t) return;
-  
-  // Handle Daily Streak Claim Button
-  var claimBtn = t.closest("#claimStreakBtn");
-  if (claimBtn) {
-    if (typeof getStreakInfo === "function" && window.NDG && window.NDG.get) {
-      var inf = getStreakInfo();
-      var s = window.NDG.get();
-      s.c = (s.c || 0) + inf.amt;
-      s.dr = { d: inf.t, s: inf.streak };
-      if (typeof window.NDG.save === "function") window.NDG.save();
-      if (typeof window.NDG.gui === "function") window.NDG.gui();
-      alert("Daily reward claimed! +₦" + inf.amt);
-      var m = document.getElementById("streakModal");
-      if (m) m.classList.add("hide");
-    }
-  }
 
-  // Handle Close Streak Modal Button
-  var closeBtn = t.closest("#closeStreakBtn");
-  if (closeBtn) {
-    var m = document.getElementById("streakModal");
-    if (m) m.classList.add("hide");
-  }
-}, true);
-
-// Expose Flutterwave shop checkout globally
-window.payWithFlutterwave = function(amount, coinPack) {
-  if (typeof FlutterwaveCheckout === "undefined") {
-    alert("Payment gateway loading... Please check your internet connection.");
-    return;
-  }
-  var user = window.NDAuth && window.NDAuth.user ? window.NDAuth.user() : { email: "player@naijadash.com", phone: "08000000000", name: "Naija Dash Player" };
-  FlutterwaveCheckout({
-    public_key: "FLWPUBK_TEST-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-X",
-    tx_ref: "ND_" + Date.now(),
-    amount: amount,
-    currency: "NGN",
-    payment_options: "card,mobilemoney,ussd",
-    customer: {
-      email: user.email || "player@naijadash.com",
-      phone_number: user.phone || "08000000000",
-      name: user.name || "Naija Dash Player"
-    },
-    callback: function (data) {
-      if (data.status === "successful" || data.status === "completed") {
-        if (window.NDG && window.NDG.get) {
-          var s = window.NDG.get();
-          s.c = (s.c || 0) + coinPack;
-          window.NDG.save();
-          window.NDG.gui();
-        }
-        alert("Payment successful! Added " + coinPack.toLocaleString() + " coins to your wallet.");
-      }
-    },
-    onclose: function() {}
-  });
-};
-</script>
 
 
 <script id="naija-dash-capture-fix">
@@ -1572,35 +1517,26 @@ window.addEventListener("click", function(e) {
 </script>
 
 
-<style id="naija-dash-definitive-fix">
-  /* Allow touch manipulation on all interactive elements */
-  button, .bt, [id*="Btn"], [id*="b"], input, select, a {
-    touch-action: manipulation !important;
-    pointer-events: auto !important;
-    cursor: pointer !important;
-    z-index: 999999 !important;
-    position: relative !important;
-  }
-  
-  /* Ensure modals and menus block canvas input when open */
-  #card:not(.hide), #tc:not(.hide), #streakModal:not(.hide), #rev:not(.hide), #adv:not(.hide) {
-    pointer-events: auto !important;
-    z-index: 999990 !important;
-  }
-</style>
 
-<script id="naija-dash-definitive-script">
-document.addEventListener("DOMContentLoaded", function() {
-  console.log("Definitive touch-to-click bridge active");
-  
-  // Force touchstart/touchend to immediately trigger clicks on mobile devices
-  document.addEventListener("touchend", function(e) {
-    var t = e.target.closest("button, .bt, [id*='Btn'], [id*='b']");
-    if (t) {
-      e.preventDefault();
-      t.click();
-    }
-  }, { passive: false });
+
+
+
+
+<script id="naija-core-script">
+window.addEventListener("error", function(e) {
+  console.error("Runtime error caught:", e.message);
+});
+
+// Force-enable click handlers on standard menu start buttons immediately
+window.addEventListener("DOMContentLoaded", function() {
+  console.log("Core UI loaded");
+  setTimeout(function() {
+    var startBtns = document.querySelectorAll("button, .bt, [id*='b']");
+    startBtns.forEach(function(btn) {
+      btn.style.pointerEvents = "auto";
+      btn.style.zIndex = "99999";
+    });
+  }, 500);
 });
 </script>
 
