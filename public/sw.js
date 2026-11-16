@@ -1,4 +1,4 @@
-const CACHE_NAME = 'naijadash-cache-v1794845878689';
+const CACHE_NAME = 'naijadash-cache-v1794846088459';
 const ASSETS = ['/', '/index.html', '/manifest.json'];
 
 self.addEventListener('install', (event) => {

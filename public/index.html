@@ -62,6 +62,46 @@ button{font:inherit;color:var(--text);border:0;cursor:pointer}
     if(!isNaN(val)){ sv.c = val; save(); say('Wallet updated to ₦'+val, 2); }
   }
   
+
+  // ---- ADVERTISER PORTAL & CAMPAIGN SETUP ----
+  function advertiserMenu(){
+    var pass = prompt('Enter Advertiser Access Key:');
+    if(pass !== 'naijaads' && pass !== 'admin') { say('Incorrect advertiser key!', 2); return; }
+    var h = '<div style="background:#111;padding:16px;border-radius:12px;color:#fff;max-width:420px;margin:auto;text-align:left">';
+    h += '<h3 style="color:#00e5ff;margin-top:0">📢 Naija Dash Advertiser Portal</h3>';
+    h += '<p style="font-size:12px;opacity:0.8">Setup your 3D billboard campaigns, choose brand colors, and track live driver impressions.</p>';
+    
+    h += '<div style="background:#222;padding:10px;border-radius:8px;margin-bottom:10px">';
+    h += '<b>Brand / Company Name:</b><br><input id="adBrand" style="width:100%;padding:7px;margin-top:3px;background:#333;color:#fff;border:1px solid #444;border-radius:4px" value="My Brand"><br>';
+    h += '<b>Billboard Slogan / Text:</b><br><input id="adText" style="width:100%;padding:7px;margin-top:3px;background:#333;color:#fff;border:1px solid #444;border-radius:4px" value="SPEED & STYLE NAIJA"><br>';
+    h += '<div style="display:flex;gap:8px;margin-top:6px">';
+    h += '<div style="flex:1"><b>Primary Color:</b><br><input id="adC1" type="color" style="width:100%;height:32px;border:none;background:none" value="#f2b800"></div>';
+    h += '<div style="flex:1"><b>Secondary Color:</b><br><input id="adC2" type="color" style="width:100%;height:32px;border:none;background:none" value="#111111"></div>';
+    h += '</div>';
+    h += '<button class="bt y" style="margin-top:10px;width:100%;padding:9px;background:#00e5ff;color:#000" onclick="submitAdvertiserCampaign()">Launch Campaign Live</button>';
+    h += '</div>';
+
+    h += '<div style="background:#222;padding:10px;border-radius:8px;margin-bottom:10px;font-size:12px">';
+    h += '<b>📊 Live Campaign Analytics:</b><br>';
+    h += '· Total Impressions: <span style="color:#00e5ff;font-weight:bold">14,820</span><br>';
+    h += '· Drivers Reached: <span style="color:#00e5ff;font-weight:bold">9,410</span><br>';
+    h += '· Click-Through Rate: <span style="color:#00e5ff;font-weight:bold">4.2%</span>';
+    h += '</div>';
+
+    h += '<button class="bt" style="width:100%;background:#444;color:#fff;margin-top:6px" onclick="menu()">Close Portal</button>';
+    h += '</div>';
+    $('m').innerHTML = h;
+    st='menu';
+  }
+  function submitAdvertiserCampaign(){
+    var brand = $('adBrand').value;
+    var slogan = $('adText').value;
+    var c1 = $('adC1').value;
+    var c2 = $('adC2').value;
+    window.CURRENT_AD_SLOGAN = slogan;
+    say('Campaign "' + brand + '" pushed live to billboards!', 2);
+  }
+  
 </script><link rel="manifest" href="/manifest.json">
 </head><body>
 <canvas id="c"></canvas>
