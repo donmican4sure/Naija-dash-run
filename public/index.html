@@ -58,6 +58,26 @@ button{font:inherit;color:var(--text);border:0;cursor:pointer}
   }
 </style>
 
+
+<style id="naija-dash-ui-fix">
+  /* Force game canvas behind UI and ensure touch interaction works */
+  canvas {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    pointer-events: auto !important;
+  }
+  
+  /* Force all UI overlays, modals, menus, and buttons to sit on top and capture input */
+  #streakModal, .modal, .menu-overlay, #menu, #ui, #tcc, #rev, #adv, button, .bt, [id*="Btn"], [id*="b"] {
+    position: relative;
+    z-index: 99999 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    cursor: pointer !important;
+  }
+</style>
+
 </head><body>
 <canvas id="c"></canvas>
 <div id="top"><div class="p"><b id="b">0</b> <span id="u">m</span><br><span id="s"></span><div class="bar" id="bw"><i id="dm"></i></div></div>
@@ -1412,6 +1432,70 @@ document.addEventListener("click", function(e) {
 });
 
 // Expose Flutterwave payment handler globally
+window.payWithFlutterwave = function(amount, coinPack) {
+  if (typeof FlutterwaveCheckout === "undefined") {
+    alert("Payment gateway loading... Please check your internet connection.");
+    return;
+  }
+  var user = window.NDAuth && window.NDAuth.user ? window.NDAuth.user() : { email: "player@naijadash.com", phone: "08000000000", name: "Naija Dash Player" };
+  FlutterwaveCheckout({
+    public_key: "FLWPUBK_TEST-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-X",
+    tx_ref: "ND_" + Date.now(),
+    amount: amount,
+    currency: "NGN",
+    payment_options: "card,mobilemoney,ussd",
+    customer: {
+      email: user.email || "player@naijadash.com",
+      phone_number: user.phone || "08000000000",
+      name: user.name || "Naija Dash Player"
+    },
+    callback: function (data) {
+      if (data.status === "successful" || data.status === "completed") {
+        if (window.NDG && window.NDG.get) {
+          var s = window.NDG.get();
+          s.c = (s.c || 0) + coinPack;
+          window.NDG.save();
+          window.NDG.gui();
+        }
+        alert("Payment successful! Added " + coinPack.toLocaleString() + " coins to your wallet.");
+      }
+    },
+    onclose: function() {}
+  });
+};
+</script>
+
+
+<script id="naija-dash-event-fix">
+document.addEventListener("click", function(e) {
+  var t = e.target;
+  if (!t) return;
+  
+  // Handle Daily Streak Claim Button
+  var claimBtn = t.closest("#claimStreakBtn");
+  if (claimBtn) {
+    if (typeof getStreakInfo === "function" && window.NDG && window.NDG.get) {
+      var inf = getStreakInfo();
+      var s = window.NDG.get();
+      s.c = (s.c || 0) + inf.amt;
+      s.dr = { d: inf.t, s: inf.streak };
+      if (typeof window.NDG.save === "function") window.NDG.save();
+      if (typeof window.NDG.gui === "function") window.NDG.gui();
+      alert("Daily reward claimed! +₦" + inf.amt);
+      var m = document.getElementById("streakModal");
+      if (m) m.classList.add("hide");
+    }
+  }
+
+  // Handle Close Streak Modal Button
+  var closeBtn = t.closest("#closeStreakBtn");
+  if (closeBtn) {
+    var m = document.getElementById("streakModal");
+    if (m) m.classList.add("hide");
+  }
+}, true);
+
+// Expose Flutterwave shop checkout globally
 window.payWithFlutterwave = function(amount, coinPack) {
   if (typeof FlutterwaveCheckout === "undefined") {
     alert("Payment gateway loading... Please check your internet connection.");
