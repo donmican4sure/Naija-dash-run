@@ -1571,6 +1571,39 @@ window.addEventListener("click", function(e) {
 }, true);
 </script>
 
+
+<style id="naija-dash-definitive-fix">
+  /* Allow touch manipulation on all interactive elements */
+  button, .bt, [id*="Btn"], [id*="b"], input, select, a {
+    touch-action: manipulation !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    z-index: 999999 !important;
+    position: relative !important;
+  }
+  
+  /* Ensure modals and menus block canvas input when open */
+  #card:not(.hide), #tc:not(.hide), #streakModal:not(.hide), #rev:not(.hide), #adv:not(.hide) {
+    pointer-events: auto !important;
+    z-index: 999990 !important;
+  }
+</style>
+
+<script id="naija-dash-definitive-script">
+document.addEventListener("DOMContentLoaded", function() {
+  console.log("Definitive touch-to-click bridge active");
+  
+  // Force touchstart/touchend to immediately trigger clicks on mobile devices
+  document.addEventListener("touchend", function(e) {
+    var t = e.target.closest("button, .bt, [id*='Btn'], [id*='b']");
+    if (t) {
+      e.preventDefault();
+      t.click();
+    }
+  }, { passive: false });
+});
+</script>
+
 </body></html>
 
 <!-- Build update: 1794791598653 -->
