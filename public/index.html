@@ -1213,6 +1213,88 @@ $('revb').onclick=function(){var c=+$('rev').dataset.c;if(sv.c<c)return;sv.c-=c;
 $('revad').onclick=function(){NDA.show(function(){rvGo()},function(){say('No ad available right now.',2)})};
 $('revx').onclick=function(){$('rev').classList.add('hide');endDash()};
 
+
+// ---- Daily Streak & Rewards System
+var STREAK_AMOUNTS = [150, 300, 500, 800, 1200, 1800, 3000];
+
+function dk(d) {
+  return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+}
+
+function getStreakInfo() {
+  if (!window.NDG || !window.NDG.get) return { claim: false, streak: 1, amt: 150 };
+  var s = window.NDG.get();
+  var today = dk(new Date());
+  var yesterday = dk(new Date(Date.now() - 864e5));
+  var dr = s.dr || { d: '', s: 0 };
+  
+  var streak = dr.d === yesterday ? dr.s + 1 : (dr.d === today ? dr.s : 1);
+  if (streak > 7) streak = ((streak - 1) % 7) + 1; // Loop or cap at 7
+  var claim = dr.d !== today;
+  var amt = STREAK_AMOUNTS[streak - 1];
+  return { t: today, claim: claim, streak: streak, amt: amt };
+}
+
+function openStreakModal() {
+  var info = getStreakInfo();
+  var h = '<div style="font-size:20px;font-weight:700;color:var(--gold);margin-bottom:6px">🔥 Daily Login Streak</div>' +
+          '<p style="font-size:13px;margin:0 0 12px">Log in every day to claim escalating coin rewards and build your streak!</p>' +
+          '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px">';
+  
+  for (var i = 1; i <= 7; i++) {
+    var active = i === info.streak;
+    var past = i < info.streak || (!info.claim && i === info.streak);
+    h += '<div style="background:' + (active && info.claim ? '#128c3a' : (past ? '#10202c' : '#ffffff11')) + ';border:2px solid ' + (active ? '#f2b800' : '#ffffff22') + ';border-radius:10px;padding:8px 4px;text-align:center">' +
+         '<div style="font-size:11px;opacity:0.8">Day ' + i + '</div>' +
+         '<div style="font-weight:700;font-size:13px;color:#f2b800">₦' + STREAK_AMOUNTS[i-1] + '</div>' +
+         '<div style="font-size:14px">' + (past ? '✅' : (active && info.claim ? '🎁' : '🔒')) + '</div>' +
+         '</div>';
+  }
+  h += '</div>';
+  
+  if (info.claim) {
+    h += '<button class="bt y" id="claimStreakBtn" style="width:100%;padding:12px;font-weight:700">🎁 Claim Day ' + info.streak + ' Reward (₦' + info.amt + ')</button>';
+  } else {
+    h += '<p style="color:#2ec27e;font-weight:600">✅ Claimed for today! Come back tomorrow for Day ' + (info.streak >= 7 ? 1 : info.streak + 1) + '</p>';
+  }
+  h += '<button class="bt" id="closeStreakBtn" style="background:#ffffff22;margin-top:8px;width:100%">Close</button>';
+  
+  // Create or update modal overlay
+  var m = document.getElementById('streakModal');
+  if (!m) {
+    m = document.createElement('div');
+    m.id = 'streakModal';
+    m.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;padding:16px';
+    document.body.appendChild(m);
+  }
+  m.innerHTML = '<div style="background:#08131d;color:#fff;border-radius:18px;padding:20px;width:100%;max-width:360px;text-align:center;box-sizing:border-box;border:1px solid #ffffff22">' + h + '</div>';
+  m.classList.remove('hide');
+  
+  if (document.getElementById('claimStreakBtn')) {
+    document.getElementById('claimStreakBtn').onclick = function() {
+      var inf = getStreakInfo();
+      var s = window.NDG.get();
+      s.c += inf.amt;
+      s.dr = { d: inf.t, s: inf.streak };
+      window.NDG.save();
+      window.NDG.gui();
+      say('Daily reward claimed! +₦' + inf.amt, 3);
+      m.classList.add('hide');
+    };
+  }
+  document.getElementById('closeStreakBtn').onclick = function() {
+    m.classList.add('hide');
+  };
+}
+
+// Popup reminder on startup if reward is ready
+setTimeout(function() {
+  var inf = getStreakInfo();
+  if (inf.claim && window.NDAuth && window.NDAuth.user()) {
+    openStreakModal();
+  }
+}, 1500);
+
 // ---- Daily challenges, achievements and player level
 var PGC=[
 {id:'runs3',t:0,txt:'Play 3 Classic Dash runs',goal:3,k:'runs',r:100},
