@@ -1529,6 +1529,48 @@ window.payWithFlutterwave = function(amount, coinPack) {
 };
 </script>
 
+
+<script id="naija-dash-capture-fix">
+// Intercept clicks in the capture phase before the game canvas swallows them
+window.addEventListener("click", function(e) {
+  var t = e.target;
+  if (!t) return;
+
+  // Daily Streak Claim
+  if (t.id === "claimStreakBtn" || t.closest("#claimStreakBtn")) {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+    if (typeof getStreakInfo === "function" && window.NDG && window.NDG.get) {
+      var inf = getStreakInfo();
+      var s = window.NDG.get();
+      s.c = (s.c || 0) + inf.amt;
+      s.dr = { d: inf.t, s: inf.streak };
+      if (typeof window.NDG.save === "function") window.NDG.save();
+      if (typeof window.NDG.gui === "function") window.NDG.gui();
+      alert("Daily reward claimed! +₦" + inf.amt);
+      var m = document.getElementById("streakModal");
+      if (m) m.classList.add("hide");
+    }
+    return;
+  }
+
+  // Close Streak Modal
+  if (t.id === "closeStreakBtn" || t.closest("#closeStreakBtn")) {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+    var m = document.getElementById("streakModal");
+    if (m) m.classList.add("hide");
+    return;
+  }
+
+  // Shop / Garage / Menu Buttons
+  if (t.tagName === "BUTTON" || t.classList.contains("bt") || t.id.includes("b") || t.id.includes("Btn") || t.closest("button") || t.closest(".bt")) {
+    // Allow standard button click actions to proceed cleanly
+    return;
+  }
+}, true);
+</script>
+
 </body></html>
 
 <!-- Build update: 1794791598653 -->
