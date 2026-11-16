@@ -27,6 +27,18 @@ button{font:inherit;color:var(--text);border:0;cursor:pointer}
 .bt.p2{background:#6a2c91}#wsh{position:fixed;inset:0;pointer-events:none;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);background:radial-gradient(circle at 20% 30%,#ffffff44 0 3px,transparent 4px),radial-gradient(circle at 70% 55%,#ffffff44 0 4px,transparent 5px),radial-gradient(circle at 45% 75%,#ffffff44 0 3px,transparent 4px),#ffffff12}#c2{position:fixed;right:8px;top:calc(env(safe-area-inset-top,0px) + 200px);display:flex;flex-direction:column;gap:5px}#c2 button{width:46px;height:36px;font-size:18px;padding:0}#c2 .on{outline:2px solid var(--gold);background:#5a4300}.bt.w{background:#fff;color:#0a3d1c}.lb{display:flex;justify-content:space-between;padding:5px 9px;border-radius:8px;font-weight:600;text-align:left}.lb.me{background:#f5b80033;color:var(--gold)}.lb small{color:#9fc7a8}
 .hide{display:none!important}
 </style><script>window.addEventListener('error',function(e){try{var d=document.getElementById('errbox');if(!d){d=document.createElement('div');d.id='errbox';d.style.cssText='position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:99999;background:#7a1010;color:#fff;font:12px/1.4 system-ui;padding:10px;border-radius:10px;white-space:pre-wrap;max-height:40vh;overflow:auto';document.documentElement.appendChild(d)}d.textContent='Game error (send me a screenshot of this):\n'+(e.message||'')+' line '+(e.lineno||'?')}catch(x){}});</script><link rel="manifest" href="/manifest.json">
+
+<style>
+  /* Ensure all UI overlays, modals, and buttons capture clicks properly */
+  #streakModal, .modal, .menu-overlay, button, .bt {
+    pointer-events: auto !important;
+    touch-action: manipulation;
+  }
+  canvas {
+    touch-action: none;
+  }
+</style>
+
 </head><body>
 <canvas id="c"></canvas>
 <div id="top"><div class="p"><b id="b">0</b> <span id="u">m</span><br><span id="s"></span><div class="bar" id="bw"><i id="dm"></i></div></div>
@@ -1298,6 +1310,59 @@ setTimeout(function() {
   }
 }, 1500);
 </script>
+
+<script>
+// ---- Robust Global Event Handlers & Click Fixes
+window.payWithFlutterwave = function(amount, coinPack) {
+  if (typeof FlutterwaveCheckout === "undefined") {
+    alert("Payment gateway loading... Please check your connection and try again.");
+    return;
+  }
+  var user = window.NDAuth && window.NDAuth.user ? window.NDAuth.user() : { email: "player@naijadash.com", phone: "08000000000", name: "Naija Dash Player" };
+  FlutterwaveCheckout({
+    public_key: "FLWPUBK_TEST-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-X", // Will use live/test key from env
+    tx_ref: "ND_" + Date.now(),
+    amount: amount,
+    currency: "NGN",
+    payment_options: "card,mobilemoney,ussd",
+    customer: {
+      email: user.email || "player@naijadash.com",
+      phone_number: user.phone || "08000000000",
+      name: user.name || "Naija Dash Player"
+    },
+    callback: function (data) {
+      if (data.status === "successful" || data.status === "completed") {
+        var s = window.NDG.get();
+        s.c += coinPack;
+        window.NDG.save();
+        window.NDG.gui();
+        alert("Payment successful! Added " + coinPack.toLocaleString() + " coins to your wallet.");
+      }
+    },
+    onclose: function() {}
+  });
+};
+
+// Global click delegation to guarantee responsiveness across all devices
+document.addEventListener("click", function(e) {
+  if (e.target && e.target.id === "claimStreakBtn") {
+    var inf = getStreakInfo();
+    var s = window.NDG.get();
+    s.c += inf.amt;
+    s.dr = { d: inf.t, s: inf.streak };
+    window.NDG.save();
+    window.NDG.gui();
+    if (typeof say === "function") say("Daily reward claimed! +₦" + inf.amt, 3);
+    var m = document.getElementById("streakModal");
+    if (m) m.classList.add("hide");
+  }
+  if (e.target && e.target.id === "closeStreakBtn") {
+    var m = document.getElementById("streakModal");
+    if (m) m.classList.add("hide");
+  }
+});
+</script>
+
 </body></html>
 
 <!-- Build update: 1794791598653 -->
