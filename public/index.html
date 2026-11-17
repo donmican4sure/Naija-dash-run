@@ -106,7 +106,7 @@ button{font:inherit;color:var(--text);border:0;cursor:pointer}
 // naija-audit-verified: Full front/back architecture locked clean.
 </script><link rel="manifest" href="/manifest.json">
 </head><body>
-<canvas id="c"></canvas>
+<canvas id="c" style="touch-action: none; overscroll-behavior: none;"></canvas>
 <div id="top"><div class="p"><b id="b">0</b> <span id="u">m</span><br><span id="s"></span><div class="bar" id="bw"><i id="dm"></i></div></div>
 <div class="p hide" id="aw" style="text-align:center"><span id="ar">▲</span><br><span id="ds"></span></div>
 <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end"><button id="th" class="p">☀ Sunset</button><button id="cm" class="p hide">📷 Chase</button><button id="gr" class="p hide">Gear D</button><button id="mu" class="p">🔊</button></div></div>
@@ -127,7 +127,8 @@ button{font:inherit;color:var(--text);border:0;cursor:pointer}
 <button class="bt hide" id="msb" style="background:#2b3947;font-size:13px"></button><div style="display:flex;gap:6px"><button class="bt" id="cyb" style="background:#2b3947;font-size:13px"></button><button class="bt hide" id="cyu" style="background:#c98a00;font-size:13px"></button></div><button class="bt hide" id="shr" style="background:#25d366;color:#04361b">📤 Share score on WhatsApp</button><button class="bt y hide" id="dly"></button><button class="bt" id="pgb" style="background:#2b3947;font-size:14px">Level 1 · Daily challenges 0/3</button><button class="bt" id="acct" style="background:#2b3947;font-size:13px">👤 Sign in / Play as guest</button><button class="bt" id="fbm" style="background:#2b3947;font-size:13px">💬 Send feedback</button><button class="bt" id="advb" style="background:#2b3947;font-size:13px">📣 Advertise / Sponsor</button><button class="bt" id="gbtn" style="background:#2b3947">🛠 Garage and Shop</button><div style="display:flex;gap:6px"><button class="bt" id="pro" style="background:#ffffff22;font-size:13px"></button><button class="bt" id="lowg" style="background:#ffffff22;font-size:13px"></button></div><button class="bt" id="m1">🏁 Classic Dash</button><button class="bt y" id="m2">🚕 Doctor Drive · Naija Mission</button><button class="bt hide" id="lcb" style="background:#2b3947;font-size:13px"></button><button class="bt p2" id="m4">🎓 Licence Challenge</button><button class="bt w" id="m3">🏆 Weekly Tournament</button></div>
 <div id="tc" class="hide"></div><div id="adv" class="hide" style="position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.55);display:flex;align-items:flex-end"></div><div id="gx" class="hide" style="position:fixed;left:0;right:0;bottom:0;max-height:54vh;overflow:auto;background:var(--panel);backdrop-filter:blur(6px);border-radius:18px 18px 0 0;padding:12px 12px calc(12px + env(safe-area-inset-bottom,0px));box-sizing:border-box"></div>
 
-<script type="text/plain" id="gsrc">
+<script type="text/plain" id="gsrc">var scene = typeof S !== 'undefined' ? S : (typeof sc !== 'undefined' ? sc : new T.Scene());
+
     function board(tr){
       var a = [];
       if(sv.t && sv.t.b && sv.t.b[tr] > 0) {
